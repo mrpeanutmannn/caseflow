@@ -1,0 +1,808 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Caseflow Capital | Understand your options while your case is pending</title>
+    <meta
+      name="description"
+      content="Caseflow helps people with active cases understand pre-settlement funding, what the process looks like, and what to consider before making a decision."
+    >
+    <script>
+      document.documentElement.classList.add("js");
+    </script>
+    <link rel="preload" href="assets/fonts/inter-tight-400.ttf" as="font" type="font/ttf" crossorigin>
+    <link rel="preload" href="assets/fonts/noe-display-medium.ttf" as="font" type="font/ttf" crossorigin>
+    <link rel="preload" href="assets/fonts/nord-regular.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="assets/css/style.css">
+  </head>
+  <body>
+    <div class="site-shell">
+      <header class="site-header">
+        <div class="container header-inner">
+          <a class="brand" href="index.html" aria-label="Caseflow Capital home">
+            <img src="assets/img/brand/logo-primary.svg" alt="Caseflow Capital">
+          </a>
+
+          <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span class="sr-only">Toggle navigation</span>
+          </button>
+
+          <nav class="site-nav" id="site-nav" aria-label="Primary">
+            <a href="#how-it-works">How it works</a>
+            <a href="pages/faq/index.html">Q&amp;A</a>
+            <a href="pages/resources/index.html">Resources</a>
+            <a href="pages/contact/index.html">Contact</a>
+          </nav>
+
+          <div class="header-actions">
+            <a class="header-phone" href="tel:8555041900">855-504-1900</a>
+            <a class="button button-primary" href="#intake">Get started</a>
+          </div>
+        </div>
+      </header>
+
+      <main>
+        <section class="hero">
+          <div class="hero-backdrop">
+            <canvas class="hero-dot-canvas" aria-hidden="true"></canvas>
+          </div>
+          <div class="container hero-grid">
+            <div class="hero-copy">
+              <p class="eyebrow eyebrow-mark" data-animate="fade-up">Funding that moves at the speed of life.</p>
+              <h1 data-animate="reveal">
+                Cases take time. Bills don't.
+              </h1>
+              <p class="hero-rotator-line" data-animate="fade-up">
+                Life keeps moving:
+                <span class="word-rotator" aria-live="polite">
+                  <span class="word-rotator-track">
+                    <span>rent</span>
+                    <span>utilities</span>
+                    <span>recovery</span>
+                    <span>childcare</span>
+                    <span>groceries</span>
+                    <span>car payment</span>
+                    <span>medication</span>
+                    <span>mortgage</span>
+                    <span>insurance</span>
+                  </span>
+                </span>
+              </p>
+              <p class="hero-lede" data-animate="fade-up">
+                Waiting on a settlement can take months. We help bridge the financial gap with simple, stress-free funding.
+              </p>
+
+              <div class="hero-actions" data-animate="fade-up">
+                <a class="button button-primary" href="#intake">Request a call</a>
+                <a class="button button-secondary" href="#how-it-works">See how it works</a>
+              </div>
+
+              <!--
+              <ul class="trust-points" data-animate="fade-up">
+                <li>Plain answers from the start</li>
+                <li>A real person to call with questions</li>
+                <li>Time to review terms before you decide</li>
+              </ul>
+              -->
+            </div>
+
+            <div class="hero-mark" aria-hidden="true">
+              <!--
+                Chevron mark — exact polygon geometry from chevron-mark.svg,
+                scaled up via viewBox. Bar thickness and slope are preserved;
+                only the inter-bar gaps are tightened by 10%, which pulls
+                bar 2 up by 0.455 and bar 3 up by 0.91 in viewBox units.
+                The viewBox height shrinks to match (34.03 - 0.91 = 33.12).
+              -->
+              <svg class="hero-chevron" viewBox="0 0 18.09 33.12" preserveAspectRatio="xMidYMid meet" role="presentation" focusable="false">
+                <defs>
+                  <!--
+                    Each bar's fill cycles between brand navy and brand green
+                    over a slow 24s cycle. The three bars are phase-offset 6s
+                    apart so the green peak walks bottom → middle → top → bottom,
+                    producing a steady upward wave of color. All three stops
+                    (dark edge, bright mid, dark edge) animate together so the
+                    whole bar transitions as one coherent color block while
+                    keeping a subtle center-bright shading for depth.
+
+                    Phase offsets (via begin=-Ns):
+                      bar 3 (bottom, leads): begin="-12s" — starts at green peak
+                      bar 2 (middle):        begin="-6s"  — mid-transition
+                      bar 1 (top, trails):   begin="0s"   — starts at navy
+                  -->
+                  <!--
+                    Bar fills are flat, single-colour panels that cycle
+                    between brand navy and brand green on a 24s loop. Phase
+                    offsets (begin=-6s / -12s) create an upward colour wave
+                    across the three bars. Both stops animate to the same
+                    value so the bar is a uniform slab of colour — no
+                    built-in "bright middle" stripe competing with the
+                    liquid blob field on top.
+                  -->
+                  <linearGradient id="hcg-bar-1" gradientUnits="objectBoundingBox" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0" stop-color="#0e1c2a">
+                      <animate attributeName="stop-color" values="#0e1c2a; #009352; #0e1c2a" dur="24s" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0 0.55 1; 0.45 0 0.55 1"/>
+                    </stop>
+                    <stop offset="1" stop-color="#0e1c2a">
+                      <animate attributeName="stop-color" values="#0e1c2a; #009352; #0e1c2a" dur="24s" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0 0.55 1; 0.45 0 0.55 1"/>
+                    </stop>
+                  </linearGradient>
+                  <linearGradient id="hcg-bar-2" gradientUnits="objectBoundingBox" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0" stop-color="#0e1c2a">
+                      <animate attributeName="stop-color" values="#0e1c2a; #009352; #0e1c2a" dur="24s" begin="-6s" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0 0.55 1; 0.45 0 0.55 1"/>
+                    </stop>
+                    <stop offset="1" stop-color="#0e1c2a">
+                      <animate attributeName="stop-color" values="#0e1c2a; #009352; #0e1c2a" dur="24s" begin="-6s" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0 0.55 1; 0.45 0 0.55 1"/>
+                    </stop>
+                  </linearGradient>
+                  <linearGradient id="hcg-bar-3" gradientUnits="objectBoundingBox" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0" stop-color="#0e1c2a">
+                      <animate attributeName="stop-color" values="#0e1c2a; #009352; #0e1c2a" dur="24s" begin="-12s" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0 0.55 1; 0.45 0 0.55 1"/>
+                    </stop>
+                    <stop offset="1" stop-color="#0e1c2a">
+                      <animate attributeName="stop-color" values="#0e1c2a; #009352; #0e1c2a" dur="24s" begin="-12s" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0 0.55 1; 0.45 0 0.55 1"/>
+                    </stop>
+                  </linearGradient>
+
+                  <!--
+                    Liquid blob field — seven brand-colored radial gradients
+                    (four greens of varying hue/intensity, three navys)
+                    whose CORES sit OUTSIDE the visible bar union. Only the
+                    soft falloff enters the clipped bar region, so the field
+                    reads as a continuously-flowing colour wash with no
+                    visible hot-spots or "eye of the radial" artefacts. This
+                    is a key liquid-rendering pattern: in real fluid
+                    simulations the "bright centre" of a colour mass is
+                    rarely aligned with the viewport — you see currents and
+                    interiors, not nuclei.
+
+                    Gradient radii are large (16–18 viewBox units on an
+                    18.09-wide mark) so the falloff reaches well into the
+                    bars from whatever offscreen edge their core sits
+                    behind. Mid-stops are bumped to ~0.45 so the 40–60%-
+                    offset band (which is the only part that's actually
+                    visible through the clip) still carries saturated colour.
+
+                    cx/cy below are seed positions — JS overwrites them
+                    every animation frame with a value computed from each
+                    blob's base position + ambient orbit + cursor coupling.
+                  -->
+                  <radialGradient id="hcg-blob-g1" cx="-4" cy="6" r="17" gradientUnits="userSpaceOnUse">
+                    <stop offset="0"    stop-color="#1db06c" stop-opacity="0.95"/>
+                    <stop offset="0.5"  stop-color="#1db06c" stop-opacity="0.46"/>
+                    <stop offset="1"    stop-color="#1db06c" stop-opacity="0"/>
+                  </radialGradient>
+                  <radialGradient id="hcg-blob-g2" cx="22" cy="20" r="18" gradientUnits="userSpaceOnUse">
+                    <stop offset="0"    stop-color="#00c06c" stop-opacity="0.90"/>
+                    <stop offset="0.5"  stop-color="#00c06c" stop-opacity="0.44"/>
+                    <stop offset="1"    stop-color="#00c06c" stop-opacity="0"/>
+                  </radialGradient>
+                  <radialGradient id="hcg-blob-g3" cx="-4" cy="28" r="17" gradientUnits="userSpaceOnUse">
+                    <stop offset="0"    stop-color="#009352" stop-opacity="0.88"/>
+                    <stop offset="0.5"  stop-color="#009352" stop-opacity="0.42"/>
+                    <stop offset="1"    stop-color="#009352" stop-opacity="0"/>
+                  </radialGradient>
+                  <radialGradient id="hcg-blob-g4" cx="23" cy="5" r="16" gradientUnits="userSpaceOnUse">
+                    <stop offset="0"    stop-color="#2edf8a" stop-opacity="0.82"/>
+                    <stop offset="0.5"  stop-color="#2edf8a" stop-opacity="0.40"/>
+                    <stop offset="1"    stop-color="#2edf8a" stop-opacity="0"/>
+                  </radialGradient>
+                  <radialGradient id="hcg-blob-n1" cx="9" cy="-4" r="16" gradientUnits="userSpaceOnUse">
+                    <stop offset="0"    stop-color="#0a1827" stop-opacity="0.92"/>
+                    <stop offset="0.5"  stop-color="#0a1827" stop-opacity="0.48"/>
+                    <stop offset="1"    stop-color="#0a1827" stop-opacity="0"/>
+                  </radialGradient>
+                  <radialGradient id="hcg-blob-n2" cx="-4" cy="16" r="17" gradientUnits="userSpaceOnUse">
+                    <stop offset="0"    stop-color="#051220" stop-opacity="0.90"/>
+                    <stop offset="0.5"  stop-color="#051220" stop-opacity="0.46"/>
+                    <stop offset="1"    stop-color="#051220" stop-opacity="0"/>
+                  </radialGradient>
+                  <radialGradient id="hcg-blob-n3" cx="22" cy="26" r="16" gradientUnits="userSpaceOnUse">
+                    <stop offset="0"    stop-color="#132a40" stop-opacity="0.80"/>
+                    <stop offset="0.5"  stop-color="#132a40" stop-opacity="0.40"/>
+                    <stop offset="1"    stop-color="#132a40" stop-opacity="0"/>
+                  </radialGradient>
+
+                  <!--
+                    Lead highlight — a pale mint-cream wash whose core also
+                    sits just off the left edge so only a soft luminous
+                    sweep enters the mark from the left. fx/fy pull the
+                    focal point further off-edge so the brightness gradient
+                    reads as angled light from outside the frame rather
+                    than a puddle inside it. JS retargets cx/cy every frame
+                    with the cursor-coupling shift; fxOffset keeps the
+                    focal point pinned relative to the moving centre.
+                  -->
+                  <radialGradient id="hcg-shine" cx="3" cy="18" fx="-1" fy="15" r="14" gradientUnits="userSpaceOnUse">
+                    <stop offset="0"    stop-color="#f4fbf7" stop-opacity="0.82"/>
+                    <stop offset="0.35" stop-color="#d8f1e4" stop-opacity="0.44"/>
+                    <stop offset="0.7"  stop-color="#cdf3de" stop-opacity="0.14"/>
+                    <stop offset="1"    stop-color="#cdf3de" stop-opacity="0"/>
+                  </radialGradient>
+
+                  <!--
+                    Clip union of the three bars. Polygons live directly
+                    inside clipPath (wrapping them in <g> would produce an
+                    empty clip region in SVG 1.1). The transform attribute
+                    on each polygon is rewritten every frame by JS to match
+                    its paired bar's parallax, so the clip travels with the
+                    bar and no "ghost" edges are exposed.
+                  -->
+                  <clipPath id="hcg-bars-clip" clipPathUnits="userSpaceOnUse">
+                    <polygon data-parallax-clip="1" transform="translate(0 0)" points="0 11.76 0 16.15 17.96 4.39 17.96 0"/>
+                    <polygon data-parallax-clip="2" transform="translate(0 0)" points=".14 20.245 .14 24.635 18.09 12.875 18.09 8.485"/>
+                    <polygon data-parallax-clip="3" transform="translate(0 0)" points=".14 28.721 .14 33.121 18.09 21.361 18.09 16.971"/>
+                  </clipPath>
+
+                  <!--
+                    Liquid filter chain — three stages composited in one
+                    SVG <filter>, applied to each liquid sub-group so the
+                    colour wash reads as real fluid rather than a set of
+                    discrete radial shapes:
+
+                      1. feGaussianBlur (stdDeviation in viewBox units):
+                         softens individual blob edges and, critically,
+                         makes overlapping blobs bleed into each other
+                         before displacement. This is the "goo" step — not
+                         the binary-threshold metaball filter (which would
+                         flatten our soft falloff), but a true optical
+                         blend that fuses partially-overlapping gradients
+                         into a single contiguous body of colour.
+                      2. feTurbulence (fractal noise, spatial-fixed seed):
+                         generates the displacement texture. Lower
+                         baseFrequency than v1 (0.26 vs 0.32) for longer-
+                         wavelength "ripples" that feel more liquid and
+                         less "noisy".
+                      3. feDisplacementMap at scale 3.6 (viewBox units):
+                         pushes pixels along the noise pattern so blob
+                         boundaries warp into irregular, slowly-varying
+                         outlines — like surface tension ripples on a
+                         thin fluid layer.
+
+                    The clip is applied to the PARENT group (not inside
+                    this filter), so displacement can run freely and then
+                    the final result is cropped to the bar union — no
+                    pixel bleed past the bars.
+                  -->
+                  <filter id="hcg-blob-distort" x="-30%" y="-30%" width="160%" height="160%">
+                    <feGaussianBlur in="SourceGraphic" stdDeviation="0.55" result="blurred"/>
+                    <feTurbulence type="fractalNoise" baseFrequency="0.26" numOctaves="2" seed="7" result="blobNoise"/>
+                    <feDisplacementMap in="blurred" in2="blobNoise" scale="3.6" xChannelSelector="R" yChannelSelector="G"/>
+                  </filter>
+
+                  <!-- Fine grain — higher baseFrequency = smaller speckle cells. -->
+                  <filter id="hcg-grain" x="0" y="0" width="1" height="1" filterUnits="objectBoundingBox" primitiveUnits="userSpaceOnUse">
+                    <feTurbulence type="fractalNoise" baseFrequency="8.5" numOctaves="2" seed="11" stitchTiles="stitch" result="noise"/>
+                    <feColorMatrix in="noise" type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.55 0" result="whiteNoise"/>
+                    <feComposite in="whiteNoise" in2="SourceGraphic" operator="in"/>
+                  </filter>
+                </defs>
+
+                <!--
+                  Bar fills wrapped in parallax groups. The entrance /
+                  hover / float animations live on .hcg-bar (outer); the
+                  JS-driven cursor parallax lives on the inner
+                  .hcg-parallax so the two never collide on the same
+                  transform. Each bar gets its own parallax coupling (see
+                  initHeroChevronParallax in app.js) so the three chevrons
+                  drift independently as the cursor moves.
+                -->
+                <g class="hcg-bars">
+                  <g class="hcg-bar hcg-bar-1">
+                    <g class="hcg-parallax" data-parallax="1">
+                      <polygon class="hcg-fill" points="0 11.76 0 16.15 17.96 4.39 17.96 0" fill="url(#hcg-bar-1)"/>
+                    </g>
+                  </g>
+                  <g class="hcg-bar hcg-bar-2">
+                    <g class="hcg-parallax" data-parallax="2">
+                      <polygon class="hcg-fill" points=".14 20.245 .14 24.635 18.09 12.875 18.09 8.485" fill="url(#hcg-bar-2)"/>
+                    </g>
+                  </g>
+                  <g class="hcg-bar hcg-bar-3">
+                    <g class="hcg-parallax" data-parallax="3">
+                      <polygon class="hcg-fill" points=".14 28.721 .14 33.121 18.09 21.361 18.09 16.971" fill="url(#hcg-bar-3)"/>
+                    </g>
+                  </g>
+                </g>
+
+                <!--
+                  Legacy SVG liquid field — kept as a fallback layer for
+                  browsers without WebGL. Hidden by default via .hcg-legacy-
+                  liquid (CSS) when the WebGL canvas is successfully
+                  initialised by JS (which strips the .has-gl-liquid class
+                  only on failure). On failure, CSS restores visibility so
+                  the mark still has some colour variation.
+                -->
+                <g class="hcg-legacy-liquid" clip-path="url(#hcg-bars-clip)">
+                  <g class="hcg-liquid-dark" filter="url(#hcg-blob-distort)">
+                    <rect class="hcg-blob" x="-6" y="-6" width="32" height="46" fill="url(#hcg-blob-n1)"/>
+                    <rect class="hcg-blob" x="-6" y="-6" width="32" height="46" fill="url(#hcg-blob-n2)"/>
+                    <rect class="hcg-blob" x="-6" y="-6" width="32" height="46" fill="url(#hcg-blob-n3)"/>
+                  </g>
+                  <g class="hcg-liquid-light" filter="url(#hcg-blob-distort)">
+                    <rect class="hcg-blob" x="-6" y="-6" width="32" height="46" fill="url(#hcg-blob-g1)"/>
+                    <rect class="hcg-blob" x="-6" y="-6" width="32" height="46" fill="url(#hcg-blob-g2)"/>
+                    <rect class="hcg-blob" x="-6" y="-6" width="32" height="46" fill="url(#hcg-blob-g3)"/>
+                    <rect class="hcg-blob" x="-6" y="-6" width="32" height="46" fill="url(#hcg-blob-g4)"/>
+                  </g>
+                </g>
+
+                <!-- Lead highlight — pale mint, subtle, strongest cursor coupling. -->
+                <g class="hcg-shine-group" clip-path="url(#hcg-bars-clip)">
+                  <rect class="hcg-shine-rect" x="-6" y="-6" width="32" height="46" fill="url(#hcg-shine)"/>
+                </g>
+
+                <!--
+                  Grain overlay on top of everything — clipped to bar union
+                  so grain modulates bars AND the liquid blobs AND the
+                  shine, giving the entire mark a unified organic texture.
+                  Overlay blend mode keeps the grain subtle.
+                -->
+                <g class="hcg-grain-layer" clip-path="url(#hcg-bars-clip)">
+                  <rect class="hcg-grain" x="0" y="0" width="18.09" height="33.12" fill="#ffffff" filter="url(#hcg-grain)"/>
+                </g>
+              </svg>
+              <!--
+                WebGL liquid — three per-chevron canvases, each masked via
+                CSS mask-image to ONE polygon so it can parallax
+                independently with the cursor (mirroring the original
+                per-bar SVG chevron mouse animation). All three run the same
+                domain-warped fBm fragment shader with shared time/cursor
+                uniforms, so the liquid reads as one continuous field
+                peeking through three moving windows. See initHeroLiquidGL
+                in app.js. If WebGL is unavailable or init fails all
+                canvases are removed and .hcg-legacy-liquid takes over.
+              -->
+              <div class="hcg-liquid-gl-stack" aria-hidden="true">
+                <!--
+                  Each canvas is wrapped in its own slot div. The slot
+                  carries the drop-shadow filter AND the parallax
+                  transform; the canvas inside carries the polygon
+                  mask. Filter-on-parent + mask-on-child is required
+                  because CSS applies mask AFTER filter on the same
+                  element, which would clip the shadow to the polygon
+                  and make it invisible.
+                -->
+                <div class="hcg-chev-slot" data-gl-chev="1">
+                  <canvas class="hcg-liquid-gl" data-gl-chev="1"></canvas>
+                </div>
+                <div class="hcg-chev-slot" data-gl-chev="2">
+                  <canvas class="hcg-liquid-gl" data-gl-chev="2"></canvas>
+                </div>
+                <div class="hcg-chev-slot" data-gl-chev="3">
+                  <canvas class="hcg-liquid-gl" data-gl-chev="3"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="values-marquee" aria-label="Caseflow qualities">
+          <div class="values-marquee-viewport">
+            <div class="values-marquee-track">
+              <div class="values-marquee-group" aria-hidden="false">
+                <div class="values-marquee-item">
+                  <span class="values-marquee-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" focusable="false">
+                      <path d="M7 6.5h10"></path>
+                      <path d="M7 9.5h10"></path>
+                      <path d="M7 12.5h7"></path>
+                      <path d="M5 4.5h14v15H5z"></path>
+                    </svg>
+                  </span>
+                  <span>Plain-English answers</span>
+                </div>
+                <div class="values-marquee-item">
+                  <span class="values-marquee-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" focusable="false">
+                      <path d="M12 20c4.2-2.1 7-5 7-9V5l-7-2-7 2v6c0 4 2.8 6.9 7 9z"></path>
+                      <path d="m9.5 11.8 1.8 1.8 3.6-4"></path>
+                    </svg>
+                  </span>
+                  <span>No pressure, smooth process</span>
+                </div>
+                <div class="values-marquee-item">
+                  <span class="values-marquee-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" focusable="false">
+                      <path d="M5 12h14"></path>
+                      <path d="m12 5 7 7-7 7"></path>
+                    </svg>
+                  </span>
+                  <span>Clear next steps</span>
+                </div>
+                <div class="values-marquee-item">
+                  <span class="values-marquee-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" focusable="false">
+                      <path d="M7 7.5h10"></path>
+                      <path d="M8.5 7.5V6a3.5 3.5 0 0 1 7 0v1.5"></path>
+                      <path d="M6 7.5h12v10H6z"></path>
+                    </svg>
+                  </span>
+                  <span>Works with your attorney</span>
+                </div>
+                <div class="values-marquee-item">
+                  <span class="values-marquee-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" focusable="false">
+                      <path d="M12 5.5v13"></path>
+                      <path d="M5.5 12H18.5"></path>
+                      <path d="m8 8 8 8"></path>
+                      <path d="m16 8-8 8"></path>
+                    </svg>
+                  </span>
+                  <span>Understandable terms</span>
+                </div>
+                <div class="values-marquee-item">
+                  <span class="values-marquee-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" focusable="false">
+                      <path d="M8.2 5.5h2.6l1.2 2.8-1.6 1.7a12.6 12.6 0 0 0 3.6 3.6l1.7-1.6 2.8 1.2v2.6c0 .9-.7 1.7-1.7 1.7A13.8 13.8 0 0 1 6.5 7.2c0-.9.8-1.7 1.7-1.7z"></path>
+                    </svg>
+                  </span>
+                  <span>Real people, easy to reach</span>
+                </div>
+              </div>
+              <div class="values-marquee-group" aria-hidden="true">
+                <div class="values-marquee-item">
+                  <span class="values-marquee-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" focusable="false">
+                      <path d="M7 6.5h10"></path>
+                      <path d="M7 9.5h10"></path>
+                      <path d="M7 12.5h7"></path>
+                      <path d="M5 4.5h14v15H5z"></path>
+                    </svg>
+                  </span>
+                  <span>Plain-English answers</span>
+                </div>
+                <div class="values-marquee-item">
+                  <span class="values-marquee-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" focusable="false">
+                      <path d="M12 20c4.2-2.1 7-5 7-9V5l-7-2-7 2v6c0 4 2.8 6.9 7 9z"></path>
+                      <path d="m9.5 11.8 1.8 1.8 3.6-4"></path>
+                    </svg>
+                  </span>
+                  <span>No pressure, smooth process</span>
+                </div>
+                <div class="values-marquee-item">
+                  <span class="values-marquee-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" focusable="false">
+                      <path d="M5 12h14"></path>
+                      <path d="m12 5 7 7-7 7"></path>
+                    </svg>
+                  </span>
+                  <span>Clear next steps</span>
+                </div>
+                <div class="values-marquee-item">
+                  <span class="values-marquee-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" focusable="false">
+                      <path d="M7 7.5h10"></path>
+                      <path d="M8.5 7.5V6a3.5 3.5 0 0 1 7 0v1.5"></path>
+                      <path d="M6 7.5h12v10H6z"></path>
+                    </svg>
+                  </span>
+                  <span>Works with your attorney</span>
+                </div>
+                <div class="values-marquee-item">
+                  <span class="values-marquee-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" focusable="false">
+                      <path d="M12 5.5v13"></path>
+                      <path d="M5.5 12H18.5"></path>
+                      <path d="m8 8 8 8"></path>
+                      <path d="m16 8-8 8"></path>
+                    </svg>
+                  </span>
+                  <span>Understandable terms</span>
+                </div>
+                <div class="values-marquee-item">
+                  <span class="values-marquee-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" focusable="false">
+                      <path d="M8.2 5.5h2.6l1.2 2.8-1.6 1.7a12.6 12.6 0 0 0 3.6 3.6l1.7-1.6 2.8 1.2v2.6c0 .9-.7 1.7-1.7 1.7A13.8 13.8 0 0 1 6.5 7.2c0-.9.8-1.7 1.7-1.7z"></path>
+                    </svg>
+                  </span>
+                  <span>Real people, easy to reach</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section section-story">
+          <div class="container story-grid">
+            <div class="story-copy" data-animate="fade-up">
+              <p class="eyebrow eyebrow-mark">What this is</p>
+              <h2>Life doesn't slow down for your case</h2>
+              <p>
+                Pre-settlement funding can help cover everyday expenses while a case is still moving through the legal
+                process. Most people start looking into it because rent, groceries, medical costs, or missed work are
+                putting real pressure on the month in front of them.
+              </p>
+              <p>
+                Caseflow is here to make that decision easier to understand. The job is to explain the process in
+                plain English, coordinate with your attorney when needed, and help you look at the terms without
+                feeling rushed.
+              </p>
+            </div>
+            <figure class="story-collage">
+              <div class="story-collage-grid" aria-hidden="true">
+                <div class="story-collage-tile story-collage-tile-large" data-animate>
+                  <picture>
+                    <source type="image/avif" srcset="assets/img/photos/expenses-money-480.avif 480w, assets/img/photos/expenses-money-800.avif 800w, assets/img/photos/expenses-money-1200.avif 1200w" sizes="(max-width: 1080px) 80vw, 520px">
+                    <source type="image/webp" srcset="assets/img/photos/expenses-money-480.webp 480w, assets/img/photos/expenses-money-800.webp 800w, assets/img/photos/expenses-money-1200.webp 1200w" sizes="(max-width: 1080px) 80vw, 520px">
+                    <img src="assets/img/photos/expenses-money.webp" alt="" loading="lazy" decoding="async">
+                  </picture>
+                </div>
+                <div class="story-collage-tile story-collage-tile-portrait" data-animate>
+                  <picture>
+                    <source type="image/avif" srcset="assets/img/photos/family-life-480.avif 480w, assets/img/photos/family-life-800.avif 800w, assets/img/photos/family-life-810.avif 810w" sizes="(max-width: 1080px) 34vw, 220px">
+                    <source type="image/webp" srcset="assets/img/photos/family-life-480.webp 480w, assets/img/photos/family-life-800.webp 800w, assets/img/photos/family-life-810.webp 810w" sizes="(max-width: 1080px) 34vw, 220px">
+                    <img src="assets/img/photos/family-life.webp" alt="" loading="lazy" decoding="async">
+                  </picture>
+                </div>
+                <div class="story-collage-tile story-collage-tile-docs" data-animate>
+                  <picture>
+                    <source type="image/avif" srcset="assets/img/photos/attorney-paperwork-480.avif 480w, assets/img/photos/attorney-paperwork-800.avif 800w, assets/img/photos/attorney-paperwork-1200.avif 1200w" sizes="(max-width: 1080px) 45vw, 220px">
+                    <source type="image/webp" srcset="assets/img/photos/attorney-paperwork-480.webp 480w, assets/img/photos/attorney-paperwork-800.webp 800w, assets/img/photos/attorney-paperwork-1200.webp 1200w" sizes="(max-width: 1080px) 45vw, 220px">
+                    <img src="assets/img/photos/attorney-paperwork.webp" alt="" loading="lazy" decoding="async">
+                  </picture>
+                </div>
+                <div class="story-collage-tile story-collage-tile-money" data-animate>
+                  <picture>
+                    <source type="image/avif" srcset="assets/img/photos/traffic-480.avif 480w, assets/img/photos/traffic-800.avif 800w, assets/img/photos/traffic-810.avif 810w" sizes="(max-width: 1080px) 34vw, 220px">
+                    <source type="image/webp" srcset="assets/img/photos/traffic-480.webp 480w, assets/img/photos/traffic-800.webp 800w, assets/img/photos/traffic-810.webp 810w" sizes="(max-width: 1080px) 34vw, 220px">
+                    <img src="assets/img/photos/traffic.webp" alt="" loading="lazy" decoding="async">
+                  </picture>
+                </div>
+                <div class="story-collage-tile story-collage-tile-life" data-animate>
+                  <picture>
+                    <source type="image/avif" srcset="assets/img/photos/people-building-480.avif 480w, assets/img/photos/people-building-800.avif 800w, assets/img/photos/people-building-1200.avif 1200w" sizes="(max-width: 1080px) 70vw, 440px">
+                    <source type="image/webp" srcset="assets/img/photos/people-building-480.webp 480w, assets/img/photos/people-building-800.webp 800w, assets/img/photos/people-building-1200.webp 1200w" sizes="(max-width: 1080px) 70vw, 440px">
+                    <img src="assets/img/photos/people-building.webp" alt="" loading="lazy" decoding="async">
+                  </picture>
+                </div>
+                <div class="story-collage-tile story-collage-tile-transit" data-animate>
+                  <picture>
+                    <source type="image/avif" srcset="assets/img/photos/people-walking-480.avif 480w, assets/img/photos/people-walking-800.avif 800w, assets/img/photos/people-walking-1200.avif 1200w" sizes="(max-width: 1080px) 34vw, 220px">
+                    <source type="image/webp" srcset="assets/img/photos/people-walking-480.webp 480w, assets/img/photos/people-walking-800.webp 800w, assets/img/photos/people-walking-1200.webp 1200w" sizes="(max-width: 1080px) 34vw, 220px">
+                    <img src="assets/img/photos/people-walking.webp" alt="" loading="lazy" decoding="async">
+                  </picture>
+                </div>
+              </div>
+            </figure>
+          </div>
+        </section>
+
+        <section class="section section-band">
+          <div class="container">
+            <div class="band-card frame-accent" data-animate="fade-up">
+              <div class="band-copy">
+                <p class="eyebrow eyebrow-mark">Before you decide</p>
+                <h2>You should be able to understand the terms before you say yes.</h2>
+              </div>
+              <div class="band-mark">
+                <img src="assets/img/brand/logo-on-dark.svg" alt="Caseflow wordmark">
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="how-it-works">
+          <div class="container">
+            <div class="process-shell frame-accent" data-animate="fade-up">
+              <div class="process-intro">
+                <div class="process-intro-copy">
+                  <div class="process-copy-stack">
+                    <div class="process-copy-main">
+                      <p class="eyebrow eyebrow-mark">How it works</p>
+                      <h2>A simple process from first call to possible funding.</h2>
+                      <p>
+                        You share the basics, Caseflow reviews the case with your attorney, and if an offer is available,
+                        you get a chance to review the terms before deciding whether to move forward.
+                      </p>
+                    </div>
+                    <div class="process-actions">
+                      <a class="button button-primary" href="#intake">Start the form</a>
+                      <a class="button button-secondary" href="tel:8555041900">Call Caseflow</a>
+                    </div>
+                  </div>
+                  <div class="process-side">
+                    <figure class="process-photo-chip stock-photo-frame" aria-hidden="true">
+                      <picture>
+                        <source type="image/avif" srcset="assets/img/photos/process-phone-docs-480.avif 480w, assets/img/photos/process-phone-docs-800.avif 800w, assets/img/photos/process-phone-docs-1200.avif 1200w" sizes="(max-width: 1080px) 430px, 420px">
+                        <source type="image/webp" srcset="assets/img/photos/process-phone-docs-480.webp 480w, assets/img/photos/process-phone-docs-800.webp 800w, assets/img/photos/process-phone-docs-1200.webp 1200w" sizes="(max-width: 1080px) 430px, 420px">
+                        <img src="assets/img/photos/process-phone-docs.webp" alt="" loading="lazy" decoding="async">
+                      </picture>
+                    </figure>
+                  </div>
+                </div>
+              </div>
+
+              <div class="process-steps-wrap">
+                <div class="steps-grid">
+                  <article class="step-card" data-animate="fade-up">
+                    <div class="step-card-inner">
+                      <div class="step-top">
+                        <span class="step-number">Step 1</span>
+                        <div class="step-icon" aria-hidden="true">
+                          <svg viewBox="0 0 24 24" focusable="false">
+                            <path d="M16 4h2a2 2 0 0 1 2 2v2"></path>
+                            <path d="M21.34 15.66a1 1 0 1 0-3-3l-5.01 5.01a2 2 0 0 0-.5.85l-.84 2.87a.5.5 0 0 0 .62.62l2.87-.84a2 2 0 0 0 .85-.5z"></path>
+                            <path d="M8 22H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                            <rect x="8" y="2" width="8" height="4" rx="1"></rect>
+                          </svg>
+                        </div>
+                      </div>
+                      <h3>Complete a simple application</h3>
+                      <p>
+                        Start with your contact information, a few details about the case, and your attorney's
+                        information if you have it.
+                      </p>
+                    </div>
+                  </article>
+                  <article class="step-card" data-animate="fade-up">
+                    <div class="step-card-inner">
+                      <div class="step-top">
+                        <span class="step-number">Step 2</span>
+                        <div class="step-icon" aria-hidden="true">
+                          <svg viewBox="0 0 24 24" focusable="false">
+                            <path d="M20 6 9 17l-5-5"></path>
+                          </svg>
+                        </div>
+                      </div>
+                      <h3>Case review and approval</h3>
+                      <p>
+                        Caseflow reviews the file with your attorney, confirms the details needed for underwriting, and
+                        lets you know what may be available.
+                      </p>
+                    </div>
+                  </article>
+                  <article class="step-card" data-animate="fade-up">
+                    <div class="step-card-inner">
+                      <div class="step-top">
+                        <span class="step-number">Step 3</span>
+                        <div class="step-icon" aria-hidden="true">
+                          <svg viewBox="0 0 24 24" focusable="false">
+                            <rect x="2" y="6" width="20" height="12" rx="2"></rect>
+                            <circle cx="12" cy="12" r="2"></circle>
+                            <path d="M6 12h.01"></path>
+                            <path d="M18 12h.01"></path>
+                          </svg>
+                        </div>
+                      </div>
+                      <h3>Review the offer and decide</h3>
+                      <p>
+                        If an offer is available, you can review the amount, pricing, and agreement before deciding. If
+                        you choose to move forward, funds are sent after the paperwork is completed.
+                      </p>
+                    </div>
+                  </article>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section section-intake" id="intake">
+          <div class="container intake-grid">
+            <div class="intake-copy" data-animate="fade-up">
+              <p class="eyebrow eyebrow-mark">Start your conversation</p>
+              <h2>Tell us what is going on.</h2>
+              <p>
+                Share a few basics about your case and what you need help understanding. That first conversation helps
+                Caseflow understand your situation and explain the next step.
+              </p>
+              <p>
+                Most reviews start with your contact information and your attorney's details.
+              </p>
+              <div class="intake-actions">
+                <a class="button button-secondary" href="tel:8555041900">Call 855-504-1900</a>
+              </div>
+            </div>
+
+            <div class="hero-panel frame-accent" data-animate="fade-left">
+              <div class="panel-topline">
+                <span>Start your conversation</span>
+                <a href="tel:8555041900">855-504-1900</a>
+              </div>
+
+              <h2>Start with a few details.</h2>
+
+              <form class="intake-form" id="intake-form">
+                <label>
+                  Full name
+                  <input type="text" name="name" placeholder="Your name">
+                </label>
+                <label>
+                  Phone number
+                  <input type="tel" name="phone" placeholder="(555) 555-5555">
+                </label>
+                <label>
+                  Email
+                  <input type="email" name="email" placeholder="you@example.com">
+                </label>
+                <label>
+                  What would help most right now?
+                  <select name="priority">
+                    <option value="">Select one</option>
+                    <option>Understanding my options</option>
+                    <option>Speaking with someone quickly</option>
+                    <option>General information about the process</option>
+                    <option>Support for a current application</option>
+                  </select>
+                </label>
+                <label>
+                  Short note
+                  <textarea name="message" rows="4" placeholder="Share a little about your situation."></textarea>
+                </label>
+                <button class="button button-primary button-block" type="submit">Review next steps</button>
+                <p class="form-note" id="form-note" aria-live="polite">
+                  A short review usually starts with your basic contact information and the attorney handling your case.
+                </p>
+              </form>
+            </div>
+          </div>
+        </section>
+
+        <section class="section section-split">
+          <div class="container">
+            <div class="split-panel split-panel-dark split-panel-focus" data-animate="fade-up">
+              <p class="eyebrow eyebrow-mark">What matters before you say yes</p>
+              <h2>Before you agree to anything, the basics should be easy to understand.</h2>
+              <ul class="feature-list">
+                <li>What pre-settlement funding is and how it differs from a traditional loan</li>
+                <li>How repayment works and what terms should be reviewed carefully</li>
+                <li>What information is usually needed from you and your attorney</li>
+                <li>Whether the amount requested actually solves the immediate problem in front of you</li>
+              </ul>
+              <div class="split-panel-actions">
+                <a class="button button-on-dark" href="pages/faq/index.html">Q&amp;A page</a>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section section-cta">
+          <div class="container cta-card frame-accent" data-animate="fade-up">
+            <div>
+              <p class="eyebrow eyebrow-mark">Talk with Caseflow</p>
+              <h2>Want to talk it through?</h2>
+              <p>
+                Call Caseflow or send over a few details. The point is to help you understand your options before you
+                commit to anything.
+              </p>
+            </div>
+            <div class="cta-actions">
+              <a class="button button-primary" href="#intake">Start the form</a>
+              <a class="button button-secondary" href="tel:8555041900">Call 855-504-1900</a>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="site-footer">
+        <div class="container footer-grid">
+          <div>
+            <a class="footer-brand" href="index.html">
+              <img src="assets/img/brand/logo-on-dark.svg" alt="Caseflow Capital">
+            </a>
+            <p>Pre-settlement funding, explained in plain English.</p>
+          </div>
+
+          <div class="footer-links">
+            <a href="pages/faq/index.html">Q&amp;A</a>
+            <a href="pages/resources/index.html">Resources</a>
+            <a href="pages/contact/index.html">Contact</a>
+            <a href="tel:8555041900">855-504-1900</a>
+          </div>
+        </div>
+        <div class="container footer-meta">
+          <span>&copy; <span id="year"></span> Caseflow Capital</span>
+          <span>Educational information and intake support for people waiting on settlement funds.</span>
+        </div>
+      </footer>
+    </div>
+
+    <script src="assets/js/app.js"></script>
+  </body>
+</html>
