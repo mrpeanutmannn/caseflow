@@ -88,6 +88,74 @@ if (wordTrack && wordRotator) {
 }
 
 /**
+ * Values marquee — clone the source group until the track is wide enough to
+ * cover ultra-wide viewports, then animate by exactly one source-group width.
+ * This prevents a blank tail from appearing before the loop resets.
+ */
+(function initValuesMarquee() {
+  const marqueeViewport = document.querySelector(".values-marquee-viewport");
+  const marqueeTrack = document.querySelector(".values-marquee-track");
+  if (!marqueeViewport || !marqueeTrack) return;
+
+  const sourceGroup = marqueeTrack.querySelector(".values-marquee-group");
+  if (!sourceGroup) return;
+
+  const prefersReducedMotion =
+    window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)");
+
+  let resizeRaf = 0;
+
+  const syncMarquee = () => {
+    const groups = Array.from(
+      marqueeTrack.querySelectorAll(".values-marquee-group")
+    );
+
+    groups.slice(1).forEach((group) => group.remove());
+
+    const sourceWidth = Math.ceil(sourceGroup.getBoundingClientRect().width);
+    if (!sourceWidth) return;
+
+    marqueeTrack.style.setProperty("--marquee-loop-width", `${sourceWidth}px`);
+
+    if (prefersReducedMotion?.matches) return;
+
+    const viewportWidth = Math.ceil(
+      marqueeViewport.getBoundingClientRect().width
+    );
+    const minTrackWidth = viewportWidth + sourceWidth;
+
+    let trackWidth = sourceWidth;
+    while (trackWidth < minTrackWidth) {
+      const clone = sourceGroup.cloneNode(true);
+      clone.dataset.marqueeClone = "true";
+      clone.setAttribute("aria-hidden", "true");
+      marqueeTrack.appendChild(clone);
+      trackWidth += sourceWidth;
+    }
+  };
+
+  const requestSync = () => {
+    if (resizeRaf) window.cancelAnimationFrame(resizeRaf);
+    resizeRaf = window.requestAnimationFrame(() => {
+      resizeRaf = 0;
+      syncMarquee();
+    });
+  };
+
+  syncMarquee();
+  window.addEventListener("resize", requestSync);
+  window.addEventListener("load", requestSync);
+
+  if ("ResizeObserver" in window) {
+    const resizeObserver = new ResizeObserver(requestSync);
+    resizeObserver.observe(marqueeViewport);
+    resizeObserver.observe(sourceGroup);
+  }
+
+  prefersReducedMotion?.addEventListener?.("change", requestSync);
+})();
+
+/**
  * Hero dot grid — an animated field of dots whose per-dot opacity, radius,
  * and color are driven by a sum of traveling sine waves. The waves move at
  * different speeds, frequencies, and directions so their interference creates
