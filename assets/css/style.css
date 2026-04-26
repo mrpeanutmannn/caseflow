@@ -1191,62 +1191,42 @@ textarea {
   font-size: 1.02rem;
 }
 
-/* Story collage — bleed-off-the-page scrapbook layout.
-   Design intent: a hand-arranged moodboard that spills past the right
-   edge of the viewport, with each tile rotated and offset slightly so
-   the collage reads as composed-by-hand rather than grid-perfect. The
-   underlying CSS Grid keeps tile spacing UNIFORM (a single `gap`
-   value), while per-tile `--rot` and `--ox/--oy` custom properties
-   inject the offset character. The parent `.section-story` already has
-   `overflow-x: clip`, which catches the bleed and prevents any
-   horizontal scrollbars regardless of viewport size. */
 .story-collage {
   position: relative;
-  /* Bleed past the right edge of the column AND past the page gutter
-     so a couple of tiles run off-screen. The clamp scales gracefully
-     between narrow desktops (~60px bleed) and wide ones (~260px). */
-  width: calc(100% + clamp(60px, 18vw, 260px));
-  margin: 0 calc(-1 * clamp(60px, 18vw, 260px)) 0 0;
-  /* Vertical padding gives tile rotations room to breathe without
-     getting clipped by neighbouring sections. */
-  padding-block: 22px;
+  /* Bleed scales with viewport: (100vw - 1180px) / 2 covers the centering
+     margin so the grid reaches the viewport edge, plus ~120px of overhang.
+     This grows automatically on ultra-wide screens without a cap. */
+  width: calc(100% + max(80px, 50vw - 470px));
+  margin: 0 calc(-1 * max(80px, 50vw - 470px)) 0 0;
+  padding-block: 12px;
   justify-self: end;
 }
 
 .story-collage-grid {
   display: grid;
-  grid-template-columns: 1.15fr 0.92fr 0.86fr;
-  grid-auto-rows: 132px;
-  /* SINGLE gap value = uniform margins between every tile pair. The
-     visual offset is added per-tile via transforms (below), which sit
-     on top of the grid layout without altering the underlying gaps. */
-  gap: 20px;
+  grid-template-columns: 1.2fr 0.9fr 0.85fr 0.85fr;
+  grid-auto-rows: clamp(118px, 9.5vw, 152px);
+  gap: 14px;
   align-items: stretch;
 }
 
-/* Default tile reset. Each tile reads its own `--rot` rotation and
-   `--ox` / `--oy` translation from its modifier class so the same
-   transform rule produces a different visual offset per tile. The
-   border-radius uses the brand `--cut-radius-md` treatment — sharp
-   top-left + bottom-right, curved top-right + bottom-left — matching
-   every other framed surface across the page. */
 .story-collage-tile {
+  --rot: 0deg;
+  --ox: 0px;
+  --oy: 0px;
   position: relative;
   overflow: hidden;
   border: 1px solid rgba(26, 43, 58, 0.05);
   background: rgba(255, 255, 255, 0.86);
   border-radius: var(--cut-radius-md);
   transform:
-    translate3d(var(--ox, 0), var(--oy, 0), 0)
-    rotate(var(--rot, 0deg));
-  /* Three-tier shadow for real depth. The long soft cast (38/64)
-     anchors each tile in space; the medium ambient (14/28) gives it
-     mass; the contact (1/2) prevents the floating-cutout look. */
+    translate3d(var(--ox), var(--oy), 0)
+    rotate(var(--rot));
   box-shadow:
     0 1px 2px rgba(26, 43, 58, 0.06),
     0 14px 28px rgba(26, 43, 58, 0.10),
     0 38px 64px rgba(26, 43, 58, 0.06);
-  z-index: var(--z, 1);
+  z-index: 1;
 }
 
 .story-collage-tile::after {
@@ -1287,21 +1267,11 @@ textarea {
   transform: scale(1.06);
 }
 
-/* --- Staggered scroll-in reveal -----------------------------------------
-   Each tile carries `data-animate`, so the IntersectionObserver in
-   app.js adds `.is-visible` when the tile scrolls into view. We
-   override the global `.js [data-animate]` rule with higher specificity
-   so the reveal animation COMPOSES with the per-tile rotation and
-   offset (instead of replacing the transform entirely). On the
-   pre-reveal state the Y component is shifted +36px and opacity is 0;
-   when `.is-visible` fires the tile slides up into its rotated rest
-   pose. Per-tile `--reveal-delay` (set on the modifier classes below)
-   produces the cascade. */
 .js .story-collage-tile[data-animate] {
   opacity: 0;
   transform:
-    translate3d(var(--ox, 0px), calc(var(--oy, 0px) + 36px), 0)
-    rotate(var(--rot, 0deg));
+    translate3d(var(--ox), calc(var(--oy) + 36px), 0)
+    rotate(var(--rot));
   transition:
     opacity 720ms cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0ms),
     transform 820ms cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0ms);
@@ -1310,80 +1280,57 @@ textarea {
 .js .story-collage-tile[data-animate].is-visible {
   opacity: 1;
   transform:
-    translate3d(var(--ox, 0px), var(--oy, 0px), 0)
-    rotate(var(--rot, 0deg));
+    translate3d(var(--ox), var(--oy), 0)
+    rotate(var(--rot));
 }
 
-/* Per-tile placement + custom-property offsets. Rotations and
-   translations were chosen so that adjacent tiles lean in OPPOSITE
-   directions (one tilts left, the next tilts right) — that's what
-   gives the collage its hand-arranged feel rather than reading as a
-   uniform "everything tilted 2 degrees" effect. Border radii are also
-   varied: a brand cut-radius on the two big landscape tiles, soft
-   rounded corners elsewhere. Z-index sets which tile sits on top in
-   the rare case of overlap from the rotations. */
-/* Per-tile placement + offsets only — `border-radius` is inherited from
-   the base `.story-collage-tile` rule (brand cut-radius), so every
-   tile gets the same sharp/curved corner pattern as the rest of the
-   page. */
+/* Bento grid placements — 4 columns, 4 rows, no rotation. */
 .story-collage-tile-large {
   grid-column: 1 / span 2;
   grid-row: 1 / span 2;
-  --rot: -2.4deg;
-  --ox: 10px;
-  --oy: 8px;
-  --z: 2;
   --reveal-delay: 0ms;
 }
 
 .story-collage-tile-portrait {
   grid-column: 3;
   grid-row: 1 / span 2;
-  --rot: 3.6deg;
-  --ox: -14px;
-  --oy: -14px;
-  --z: 4;
-  --reveal-delay: 90ms;
+  --reveal-delay: 80ms;
+}
+
+.story-collage-tile-family-1 {
+  grid-column: 4;
+  grid-row: 1 / span 2;
+  --reveal-delay: 160ms;
 }
 
 .story-collage-tile-docs {
   grid-column: 1;
   grid-row: 3 / span 2;
-  --rot: 2.4deg;
-  --ox: -14px;
-  --oy: 10px;
-  --z: 3;
-  --reveal-delay: 180ms;
+  --reveal-delay: 240ms;
 }
 
 .story-collage-tile-money {
-  grid-column: 2;
+  grid-column: 2 / span 2;
   grid-row: 3;
-  --rot: -3.8deg;
-  --ox: 10px;
-  --oy: -10px;
-  --z: 5;
-  --reveal-delay: 270ms;
+  --reveal-delay: 320ms;
 }
 
-.story-collage-tile-transit {
-  grid-column: 3;
+.story-collage-tile-family-2 {
+  grid-column: 4;
   grid-row: 3;
-  --rot: 2.8deg;
-  --ox: -10px;
-  --oy: -12px;
-  --z: 6;
-  --reveal-delay: 360ms;
+  --reveal-delay: 400ms;
 }
 
 .story-collage-tile-life {
   grid-column: 2 / span 2;
   grid-row: 4;
-  --rot: -2.0deg;
-  --ox: 14px;
-  --oy: 8px;
-  --z: 1;
-  --reveal-delay: 450ms;
+  --reveal-delay: 480ms;
+}
+
+.story-collage-tile-transit {
+  grid-column: 4;
+  grid-row: 4;
+  --reveal-delay: 560ms;
 }
 
 .stock-photo-frame {
@@ -2154,26 +2101,14 @@ textarea {
   }
 
   .story-collage {
-    /* Below the 2-col copy/collage grid breakpoint the collage
-       occupies the full width on its own row. Keep a softer bleed so
-       it still feels alive but doesn't overwhelm the narrower frame. */
     width: calc(100% + clamp(20px, 8vw, 80px));
     margin-right: calc(-1 * clamp(20px, 8vw, 80px));
   }
 
   .story-collage-grid {
-    grid-auto-rows: 116px;
-    gap: 16px;
+    grid-auto-rows: 110px;
+    gap: 12px;
   }
-
-  /* Halve the offset so rotations don't push tiles too far out of
-     alignment when the column is narrower. */
-  .story-collage-tile-large    { --rot: -1.2deg; --ox: 4px;  --oy: 2px;  }
-  .story-collage-tile-portrait { --rot:  1.8deg; --ox: -4px; --oy: -6px; }
-  .story-collage-tile-docs     { --rot:  1.2deg; --ox: -6px; --oy: 4px;  }
-  .story-collage-tile-money    { --rot: -2.0deg; --ox: 4px;  --oy: -4px; }
-  .story-collage-tile-life     { --rot: -1.0deg; --ox: 6px;  --oy: 2px;  }
-  .story-collage-tile-transit  { --rot:  1.4deg; --ox: -4px; --oy: -4px; }
 
   .site-nav {
     justify-content: start;
@@ -2324,30 +2259,19 @@ textarea {
     gap: 14px;
   }
 
-  /* Reset placements to the natural 2-col flow and zero out the
-     rotation/offset custom properties — the composed transform
-     formula then evaluates to identity, while still leaving the
-     reveal animation free to animate the same `transform` property
-     (we don't use `transform: none` here, which would compete with
-     the staggered scroll-in transition). The hover image-zoom still
-     works on touch as a tap visit doesn't matter; nothing else needs
-     touch-specific suppression. */
   .story-collage-tile,
   .story-collage-tile-large,
   .story-collage-tile-portrait,
+  .story-collage-tile-family-1,
   .story-collage-tile-docs,
   .story-collage-tile-money,
+  .story-collage-tile-family-2,
   .story-collage-tile-life,
   .story-collage-tile-transit {
     grid-column: auto;
     grid-row: auto;
-    --rot: 0deg;
-    --ox: 0px;
-    --oy: 0px;
   }
 
-  /* Two of the tiles still stretch over two rows so the mobile mosaic
-     keeps a bit of visual variety instead of a flat grid. */
   .story-collage-tile-large,
   .story-collage-tile-docs {
     grid-row: span 2;
