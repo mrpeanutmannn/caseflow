@@ -22,6 +22,7 @@
   --cut-radius-lg: 0 var(--radius-lg) 0 var(--radius-lg);
   --cut-radius-pill: 0 999px 0 999px;
   --container: min(1180px, calc(100vw - 40px));
+  --section-space: clamp(60px, 7vw, 84px);
   --transition: 220ms ease;
   --grid-light: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cg fill='none' stroke='%231A2B3A' stroke-opacity='.04' stroke-width='1'%3E%3Cpath d='M0 .5H120M0 30.5H120M0 60.5H120M0 90.5H120M.5 0V120M30.5 0V120M60.5 0V120M90.5 0V120'/%3E%3C/g%3E%3C/svg%3E");
   --grid-dark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cg fill='none' stroke='white' stroke-opacity='.08' stroke-width='1'%3E%3Cpath d='M0 .5H120M0 30.5H120M0 60.5H120M0 90.5H120M.5 0V120M30.5 0V120M60.5 0V120M90.5 0V120'/%3E%3C/g%3E%3C/svg%3E");
@@ -323,13 +324,13 @@ textarea {
 
 .hero {
   position: relative;
-  overflow: clip;
+  overflow-x: clip;
   padding: 42px 0 64px;
 }
 
 .hero-backdrop {
   position: absolute;
-  inset: 0;
+  inset: -80px 0 -100px;
   background:
     radial-gradient(circle at 10% 12%, rgba(255, 255, 255, 0.72), transparent 30%),
     radial-gradient(circle at 82% 18%, rgba(0, 147, 82, 0.2), transparent 24%),
@@ -1063,11 +1064,17 @@ textarea {
 }
 
 .section {
-  padding: 84px 0;
+  padding: var(--section-space) 0;
+}
+
+/* Keep one consistent vertical gap between stacked homepage sections instead
+   of compounding top and bottom padding on every adjacent section pair. */
+main > .section + .section {
+  padding-top: 0;
 }
 
 .section-intake {
-  padding-top: 12px;
+  padding-top: 0;
 }
 
 .intake-grid {
@@ -1169,7 +1176,7 @@ textarea {
 }
 
 .section-story {
-  padding-top: 46px;
+  padding-top: var(--section-space);
   overflow-x: clip;
 }
 
@@ -1726,7 +1733,7 @@ textarea {
 }
 
 .section-split {
-  padding-top: 44px;
+  padding-top: 0;
 }
 
 .split-grid {
@@ -1893,7 +1900,7 @@ textarea {
 }
 
 .section-cta {
-  padding-top: 34px;
+  padding-top: 0;
 }
 
 .cta-card {
