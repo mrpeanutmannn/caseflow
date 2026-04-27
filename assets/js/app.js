@@ -48,6 +48,61 @@ if (intakeForm && formNote) {
   });
 }
 
+document.querySelectorAll(".faq-item").forEach((item) => {
+  const summary = item.querySelector("summary");
+  const answer = item.querySelector(".faq-answer");
+  if (!summary || !answer) return;
+
+  if (!item.open) {
+    answer.style.height = "0px";
+  }
+
+  summary.addEventListener("click", (event) => {
+    event.preventDefault();
+
+    const prefersReducedMotion = window.matchMedia?.(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+
+    if (prefersReducedMotion) {
+      item.open = !item.open;
+      answer.style.height = item.open ? "auto" : "0px";
+      return;
+    }
+
+    const isOpen = item.open;
+
+    if (isOpen) {
+      item.classList.add("is-closing");
+      answer.style.height = `${answer.scrollHeight}px`;
+      window.requestAnimationFrame(() => {
+        answer.style.height = "0px";
+      });
+      const completeClose = (transitionEvent) => {
+        if (transitionEvent.propertyName !== "height") return;
+        answer.removeEventListener("transitionend", completeClose);
+        item.classList.remove("is-closing");
+        item.open = false;
+      };
+      answer.addEventListener("transitionend", completeClose);
+      return;
+    }
+
+    item.open = true;
+    item.classList.remove("is-closing");
+    answer.style.height = "0px";
+    window.requestAnimationFrame(() => {
+      answer.style.height = `${answer.scrollHeight}px`;
+    });
+    const completeOpen = (transitionEvent) => {
+      if (transitionEvent.propertyName !== "height") return;
+      answer.removeEventListener("transitionend", completeOpen);
+      answer.style.height = "auto";
+    };
+    answer.addEventListener("transitionend", completeOpen);
+  });
+});
+
 if (wordTrack && wordRotator) {
   const words = Array.from(wordTrack.children);
   let activeIndex = 0;
@@ -462,15 +517,34 @@ if (wordTrack && wordRotator) {
   const mark = document.querySelector(".hero-mark");
   if (!mark) return;
 
+  let didReveal = false;
+  const revealNow = () => {
+    if (didReveal) return;
+    didReveal = true;
+    mark.classList.add("is-revealed");
+  };
+
   const reveal = () => {
-    // Two rAFs guarantees the initial state has been committed before we
-    // add the class that switches to the animating state — industry-standard
-    // technique for reliable enter animations on just-parsed DOM.
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        mark.classList.add("is-revealed");
-      });
-    });
+    const revealAfterPositionReady = () => {
+      // One more rAF lets the cursor-derived transforms commit before
+      // opacity starts, preventing the mark from fading in and then jumping.
+      requestAnimationFrame(revealNow);
+    };
+
+    if (mark.classList.contains("is-position-ready")) {
+      revealAfterPositionReady();
+      return;
+    }
+
+    const fallback = window.setTimeout(revealAfterPositionReady, 180);
+    mark.addEventListener(
+      "hero-chevron-position-ready",
+      () => {
+        window.clearTimeout(fallback);
+        revealAfterPositionReady();
+      },
+      { once: true }
+    );
   };
 
   if (document.readyState === "loading") {
@@ -520,7 +594,7 @@ if (wordTrack && wordRotator) {
   // laterally while others respond mostly vertically. That "different
   // directions" behaviour is what keeps the field from feeling like one
   // rigid mass translating uniformly.
-  // All blob base positions (bx/by) sit OUTSIDE the 0–18.09 × 0–33.12
+  // All blob base positions (bx/by) sit OUTSIDE the 0–18.09 × 0–29.727
   // visible viewBox so the bright radial CORES never enter the clipped
   // bar region — only the soft 0.4–0.7 offset band of each gradient
   // reaches the bars. This is the single biggest change that makes the
@@ -564,6 +638,8 @@ if (wordTrack && wordRotator) {
       n.el.setAttribute("cx", n.bx.toFixed(3));
       n.el.setAttribute("cy", n.by.toFixed(3));
     }
+    mark.classList.add("is-position-ready");
+    mark.dispatchEvent(new CustomEvent("hero-chevron-position-ready"));
     return;
   }
 
@@ -588,7 +664,7 @@ if (wordTrack && wordRotator) {
 
   // Per-bar parallax — each of the three chevrons drifts with its own
   // coupling to the cursor, so they don't translate as one rigid block.
-  // Units are viewBox units (the SVG is 18.09 × 33.12) — at max cursor
+  // Units are viewBox units (the SVG is 18.09 × 29.727) — at max cursor
   // deflection a bar shifts up to ~0.6 vb-units, which at the rendered
   // size (~390px wide) lands around 12–13px of travel. Subtle but clearly
   // visible when the cursor swings across the viewport.
@@ -634,9 +710,24 @@ if (wordTrack && wordRotator) {
   measureVbToPx();
   window.addEventListener("resize", measureVbToPx, { passive: true });
 
+  let didPrimePosition = false;
+  const signalPositionReady = () => {
+    if (didPrimePosition) return;
+    didPrimePosition = true;
+    mark.classList.add("is-position-ready");
+    mark.dispatchEvent(new CustomEvent("hero-chevron-position-ready"));
+  };
+
   const tick = (now) => {
-    curMX += (targetMX - curMX) * M_LERP;
-    curMY += (targetMY - curMY) * M_LERP;
+    const isFirstFrame = !didPrimePosition;
+
+    if (isFirstFrame) {
+      curMX = targetMX;
+      curMY = targetMY;
+    } else {
+      curMX += (targetMX - curMX) * M_LERP;
+      curMY += (targetMY - curMY) * M_LERP;
+    }
 
     // Per-chevron parallax — the same eased cursor signal feeds both the
     // SVG bar transforms (used when WebGL is unavailable / the fallback is
@@ -654,8 +745,13 @@ if (wordTrack && wordRotator) {
       const tyVb = p.cursorY * curMY;
       const tx = glActive ? 0 : txVb;
       const ty = glActive ? 0 : tyVb;
-      p.x += (tx - p.x) * LERP;
-      p.y += (ty - p.y) * LERP;
+      if (isFirstFrame) {
+        p.x = tx;
+        p.y = ty;
+      } else {
+        p.x += (tx - p.x) * LERP;
+        p.y += (ty - p.y) * LERP;
+      }
       const transform = `translate(${p.x.toFixed(3)} ${p.y.toFixed(3)})`;
       p.barEl.setAttribute("transform", transform);
       if (p.clipEl) p.clipEl.setAttribute("transform", transform);
@@ -670,8 +766,13 @@ if (wordTrack && wordRotator) {
         const cy = (glActive ? tyVb : 0) * vbToPx;
         // Separate lerp state for the slot so its easing isn't
         // coupled to the SVG-only path above.
-        p.slotX = (p.slotX || 0) + (cx - (p.slotX || 0)) * LERP;
-        p.slotY = (p.slotY || 0) + (cy - (p.slotY || 0)) * LERP;
+        if (isFirstFrame) {
+          p.slotX = cx;
+          p.slotY = cy;
+        } else {
+          p.slotX = (p.slotX || 0) + (cx - (p.slotX || 0)) * LERP;
+          p.slotY = (p.slotY || 0) + (cy - (p.slotY || 0)) * LERP;
+        }
         p.glSlotEl.style.transform = `translate3d(${p.slotX.toFixed(2)}px, ${p.slotY.toFixed(2)}px, 0)`;
       }
     }
@@ -687,8 +788,13 @@ if (wordTrack && wordRotator) {
       const orbitY = n.ay * Math.cos(t * n.freqY + n.phaseY);
       const tx = n.bx + orbitX + n.cursorX * curMX;
       const ty = n.by + orbitY + n.cursorY * curMY;
-      n.x += (tx - n.x) * LERP;
-      n.y += (ty - n.y) * LERP;
+      if (isFirstFrame) {
+        n.x = tx;
+        n.y = ty;
+      } else {
+        n.x += (tx - n.x) * LERP;
+        n.y += (ty - n.y) * LERP;
+      }
       const cxStr = n.x.toFixed(3);
       const cyStr = n.y.toFixed(3);
       n.el.setAttribute("cx", cxStr);
@@ -703,6 +809,7 @@ if (wordTrack && wordRotator) {
       }
     }
 
+    signalPositionReady();
     requestAnimationFrame(tick);
   };
 
@@ -772,7 +879,7 @@ if (wordTrack && wordRotator) {
   //   * Two domain-warp passes — the second pass feeds the first back
   //     in with different phases and a partially negated time term so
   //     the field genuinely swirls instead of just translating. With
-  //     the speed bumped to t*0.015 the swirl is finally visible.
+  //     the speed bumped to t*0.03 the swirl is visible without feeling busy.
   //   * Per-chevron parallax is applied as a CSS transform on the
   //     slot wrapping the canvas, so the shader itself doesn't need a
   //     u_mouse uniform — the field translates in lockstep with the
@@ -827,7 +934,7 @@ if (wordTrack && wordRotator) {
       uv.x *= u_resolution.x / u_resolution.y;
 
       vec2  p = uv * 0.35;        // feature scale
-      float t = u_time * 0.015;   // gentle flow, ~2x previous speed
+      float t = u_time * 0.03;    // gentle flow, 2x faster idle colour movement
 
       // Two-pass domain warp. q deforms the input into organic blobs;
       // r feeds q back into another fbm sample with different phases /
@@ -961,7 +1068,7 @@ if (wordTrack && wordRotator) {
   mark.classList.add("has-gl-liquid");
 
   // --- Render loop state -----------------------------------------------
-  // Cap to ~30 fps — the field motion is so slow (u_time*0.008) that
+  // Cap to ~30 fps — the field motion is still slow enough that
   // 30fps and 60fps look identical, but 30fps halves the GPU work. We
   // keep rAF (not setInterval) so the loop stays on the browser's
   // vsync-aligned beat and gets auto-throttled when the tab loses focus.

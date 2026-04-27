@@ -34,7 +34,6 @@
           <nav class="site-nav" id="site-nav" aria-label="Primary">
             <a href="#how-it-works">How it works</a>
             <a href="pages/faq/index.html">Q&amp;A</a>
-            <a href="pages/resources/index.html">Resources</a>
             <a href="pages/contact/index.html">Contact</a>
           </nav>
 
@@ -54,7 +53,8 @@
             <div class="hero-copy">
               <p class="eyebrow eyebrow-mark" data-animate="fade-up">Funding that moves at the speed of life.</p>
               <h1 data-animate="reveal">
-                Cases take time. Bills don't.
+                <span class="hero-headline-strong">Cases take time.</span>
+                <span class="hero-headline-italic">Bills don't.</span>
               </h1>
               <p class="hero-rotator-line" data-animate="fade-up">
                 Life keeps moving:
@@ -95,10 +95,10 @@
                 Chevron mark — exact polygon geometry from chevron-mark.svg,
                 scaled up via viewBox. Bar thickness and slope are preserved;
                 only the inter-bar gaps are tightened by 10%, which pulls
-                bar 2 up by 0.455 and bar 3 up by 0.91 in viewBox units.
-                The viewBox height shrinks to match (34.03 - 0.91 = 33.12).
+                bar 2 and bar 3 are pulled closer together so the tall
+                three-chevron stack reads tighter beside the headline.
               -->
-              <svg class="hero-chevron" viewBox="0 0 18.09 33.12" preserveAspectRatio="xMidYMid meet" role="presentation" focusable="false">
+              <svg class="hero-chevron" viewBox="0 0 18.09 29.727" preserveAspectRatio="xMidYMid meet" role="presentation" focusable="false">
                 <defs>
                   <!--
                     Each bar's fill cycles between brand navy and brand green
@@ -234,8 +234,8 @@
                   -->
                   <clipPath id="hcg-bars-clip" clipPathUnits="userSpaceOnUse">
                     <polygon data-parallax-clip="1" transform="translate(0 0)" points="0 11.76 0 16.15 17.96 4.39 17.96 0"/>
-                    <polygon data-parallax-clip="2" transform="translate(0 0)" points=".14 20.245 .14 24.635 18.09 12.875 18.09 8.485"/>
-                    <polygon data-parallax-clip="3" transform="translate(0 0)" points=".14 28.721 .14 33.121 18.09 21.361 18.09 16.971"/>
+                    <polygon data-parallax-clip="2" transform="translate(0 0)" points=".14 18.548 .14 22.938 18.09 11.178 18.09 6.788"/>
+                    <polygon data-parallax-clip="3" transform="translate(0 0)" points=".14 25.327 .14 29.727 18.09 17.967 18.09 13.577"/>
                   </clipPath>
 
                   <!--
@@ -299,12 +299,12 @@
                   </g>
                   <g class="hcg-bar hcg-bar-2">
                     <g class="hcg-parallax" data-parallax="2">
-                      <polygon class="hcg-fill" points=".14 20.245 .14 24.635 18.09 12.875 18.09 8.485" fill="url(#hcg-bar-2)"/>
+                      <polygon class="hcg-fill" points=".14 18.548 .14 22.938 18.09 11.178 18.09 6.788" fill="url(#hcg-bar-2)"/>
                     </g>
                   </g>
                   <g class="hcg-bar hcg-bar-3">
                     <g class="hcg-parallax" data-parallax="3">
-                      <polygon class="hcg-fill" points=".14 28.721 .14 33.121 18.09 21.361 18.09 16.971" fill="url(#hcg-bar-3)"/>
+                      <polygon class="hcg-fill" points=".14 25.327 .14 29.727 18.09 17.967 18.09 13.577" fill="url(#hcg-bar-3)"/>
                     </g>
                   </g>
                 </g>
@@ -343,7 +343,7 @@
                   Overlay blend mode keeps the grain subtle.
                 -->
                 <g class="hcg-grain-layer" clip-path="url(#hcg-bars-clip)">
-                  <rect class="hcg-grain" x="0" y="0" width="18.09" height="33.12" fill="#ffffff" filter="url(#hcg-grain)"/>
+                  <rect class="hcg-grain" x="0" y="0" width="18.09" height="29.727" fill="#ffffff" filter="url(#hcg-grain)"/>
                 </g>
               </svg>
               <!--
@@ -523,6 +523,10 @@
                 plain English, coordinate with your attorney when needed, and help you look at the terms without
                 feeling rushed.
               </p>
+              <div class="story-actions">
+                <a class="button button-primary" href="#intake">Request a call</a>
+                <a class="button button-secondary" href="pages/faq/index.html">See common questions</a>
+              </div>
             </div>
             <figure class="story-collage">
               <div class="story-collage-grid" aria-hidden="true">
@@ -540,13 +544,6 @@
                     <img src="assets/img/photos/family-life.webp" alt="" loading="lazy" decoding="async">
                   </picture>
                 </div>
-                <div class="story-collage-tile story-collage-tile-family-1" data-animate>
-                  <picture>
-                    <source type="image/avif" srcset="assets/img/photos/family-home-480.avif 480w, assets/img/photos/family-home-800.avif 800w" sizes="(max-width: 1080px) 34vw, 220px">
-                    <source type="image/webp" srcset="assets/img/photos/family-home-480.webp 480w, assets/img/photos/family-home-800.webp 800w" sizes="(max-width: 1080px) 34vw, 220px">
-                    <img src="assets/img/photos/family-home.webp" alt="" loading="lazy" decoding="async">
-                  </picture>
-                </div>
                 <div class="story-collage-tile story-collage-tile-docs" data-animate>
                   <picture>
                     <source type="image/avif" srcset="assets/img/photos/attorney-paperwork-480.avif 480w, assets/img/photos/attorney-paperwork-800.avif 800w, assets/img/photos/attorney-paperwork-1200.avif 1200w" sizes="(max-width: 1080px) 45vw, 220px">
@@ -559,13 +556,6 @@
                     <source type="image/avif" srcset="assets/img/photos/traffic-480.avif 480w, assets/img/photos/traffic-800.avif 800w, assets/img/photos/traffic-810.avif 810w" sizes="(max-width: 1080px) 34vw, 220px">
                     <source type="image/webp" srcset="assets/img/photos/traffic-480.webp 480w, assets/img/photos/traffic-800.webp 800w, assets/img/photos/traffic-810.webp 810w" sizes="(max-width: 1080px) 34vw, 220px">
                     <img src="assets/img/photos/traffic.webp" alt="" loading="lazy" decoding="async">
-                  </picture>
-                </div>
-                <div class="story-collage-tile story-collage-tile-family-2" data-animate>
-                  <picture>
-                    <source type="image/avif" srcset="assets/img/photos/busy-errands-480.avif 480w, assets/img/photos/busy-errands-800.avif 800w" sizes="(max-width: 1080px) 34vw, 220px">
-                    <source type="image/webp" srcset="assets/img/photos/busy-errands-480.webp 480w, assets/img/photos/busy-errands-800.webp 800w" sizes="(max-width: 1080px) 34vw, 220px">
-                    <img src="assets/img/photos/busy-errands.webp" alt="" loading="lazy" decoding="async">
                   </picture>
                 </div>
                 <div class="story-collage-tile story-collage-tile-life" data-animate>
@@ -592,7 +582,10 @@
             <div class="band-card frame-accent" data-animate="fade-up">
               <div class="band-copy">
                 <p class="eyebrow eyebrow-mark">Before you decide</p>
-                <h2>You should be able to understand the terms before you say yes.</h2>
+                <h2>
+                  <span class="band-headline-strong">Life keeps moving.</span>
+                  <span class="band-headline-italic">So should your cashflow.</span>
+                </h2>
               </div>
               <div class="band-mark">
                 <img src="assets/img/brand/logo-on-dark.svg" alt="Caseflow wordmark">
@@ -712,6 +705,31 @@
               <div class="intake-actions">
                 <a class="button button-secondary" href="tel:8555041900">Call 855-504-1900</a>
               </div>
+              <figure class="intake-collage" aria-hidden="true">
+                <div class="intake-collage-grid">
+                  <div class="story-collage-tile intake-collage-tile intake-collage-tile-trees" data-animate>
+                    <picture>
+                      <source type="image/avif" srcset="assets/img/photos/intake-trees-360.avif 360w, assets/img/photos/intake-trees-520.avif 520w, assets/img/photos/intake-trees-800.avif 800w" sizes="(max-width: 780px) 42vw, (max-width: 1080px) 230px, 220px">
+                      <source type="image/webp" srcset="assets/img/photos/intake-trees-360.webp 360w, assets/img/photos/intake-trees-520.webp 520w, assets/img/photos/intake-trees-800.webp 800w" sizes="(max-width: 780px) 42vw, (max-width: 1080px) 230px, 220px">
+                      <img src="assets/img/photos/intake-trees.webp" alt="" loading="lazy" decoding="async">
+                    </picture>
+                  </div>
+                  <div class="story-collage-tile intake-collage-tile intake-collage-tile-girls" data-animate>
+                    <picture>
+                      <source type="image/avif" srcset="assets/img/photos/intake-girls-360.avif 360w, assets/img/photos/intake-girls-520.avif 520w, assets/img/photos/intake-girls-800.avif 800w" sizes="(max-width: 780px) 42vw, (max-width: 1080px) 230px, 220px">
+                      <source type="image/webp" srcset="assets/img/photos/intake-girls-360.webp 360w, assets/img/photos/intake-girls-520.webp 520w, assets/img/photos/intake-girls-800.webp 800w" sizes="(max-width: 780px) 42vw, (max-width: 1080px) 230px, 220px">
+                      <img src="assets/img/photos/intake-girls.webp" alt="" loading="lazy" decoding="async">
+                    </picture>
+                  </div>
+                  <div class="story-collage-tile intake-collage-tile intake-collage-tile-man" data-animate>
+                    <picture>
+                      <source type="image/avif" srcset="assets/img/photos/intake-man-laptop-480.avif 480w, assets/img/photos/intake-man-laptop-720.avif 720w, assets/img/photos/intake-man-laptop-810.avif 810w" sizes="(max-width: 780px) 58vw, (max-width: 1080px) 320px, 300px">
+                      <source type="image/webp" srcset="assets/img/photos/intake-man-laptop-480.webp 480w, assets/img/photos/intake-man-laptop-720.webp 720w, assets/img/photos/intake-man-laptop-810.webp 810w" sizes="(max-width: 780px) 58vw, (max-width: 1080px) 320px, 300px">
+                      <img src="assets/img/photos/intake-man-laptop.webp" alt="" loading="lazy" decoding="async">
+                    </picture>
+                  </div>
+                </div>
+              </figure>
             </div>
 
             <div class="hero-panel frame-accent" data-animate="fade-left">
@@ -764,11 +782,17 @@
               <p class="eyebrow eyebrow-mark">What matters before you say yes</p>
               <h2>Before you agree to anything, the basics should be easy to understand.</h2>
               <ul class="feature-list">
-                <li>What pre-settlement funding is and how it differs from a traditional loan</li>
-                <li>How repayment works and what terms should be reviewed carefully</li>
-                <li>What information is usually needed from you and your attorney</li>
-                <li>Whether the amount requested actually solves the immediate problem in front of you</li>
+                <li>How funding is different from a traditional loan</li>
+                <li>What repayment and fees mean before you sign</li>
+                <li>Whether the amount helps with the pressure right now</li>
               </ul>
+              <figure class="split-photo-chip stock-photo-frame" aria-hidden="true">
+                <picture>
+                  <source type="image/avif" srcset="assets/img/photos/stock-bills-table-480.avif 480w, assets/img/photos/stock-bills-table-800.avif 800w, assets/img/photos/stock-bills-table-1200.avif 1200w" sizes="(max-width: 1080px) 430px, 430px">
+                  <source type="image/webp" srcset="assets/img/photos/stock-bills-table-480.webp 480w, assets/img/photos/stock-bills-table-800.webp 800w, assets/img/photos/stock-bills-table-1200.webp 1200w" sizes="(max-width: 1080px) 430px, 430px">
+                  <img src="assets/img/photos/stock-bills-table.webp" alt="" loading="lazy" decoding="async">
+                </picture>
+              </figure>
               <div class="split-panel-actions">
                 <a class="button button-on-dark" href="pages/faq/index.html">Q&amp;A page</a>
               </div>
@@ -805,7 +829,6 @@
 
           <div class="footer-links">
             <a href="pages/faq/index.html">Q&amp;A</a>
-            <a href="pages/resources/index.html">Resources</a>
             <a href="pages/contact/index.html">Contact</a>
             <a href="tel:8555041900">855-504-1900</a>
           </div>

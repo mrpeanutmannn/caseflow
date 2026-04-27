@@ -318,18 +318,31 @@ textarea {
   box-shadow: 0 22px 52px rgba(0, 0, 0, 0.26);
 }
 
+.button-ghost-dark {
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.24);
+}
+
+.button-ghost-dark:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.42);
+}
+
 .button-block {
   width: 100%;
 }
 
 .hero {
   position: relative;
+  z-index: 0;
   overflow-x: clip;
   padding: 42px 0 64px;
 }
 
 .hero-backdrop {
   position: absolute;
+  z-index: 0;
   inset: -80px 0 -100px;
   background:
     radial-gradient(circle at 10% 12%, rgba(255, 255, 255, 0.72), transparent 30%),
@@ -433,6 +446,7 @@ textarea {
 
 .hero-grid {
   position: relative;
+  z-index: 1;
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   gap: clamp(32px, 6vw, 88px);
@@ -448,16 +462,16 @@ textarea {
   /* Scaled up 10% from the original 260/26vw/390 clamp so the mark sits
      with more presence next to the headline. */
   width: clamp(286px, 28.6vw, 429px);
-  /* Nudge the whole mark up so its optical centre lines up with the
+  /* Nudge the whole mark so its optical centre lines up with the
      headline block — the tall diagonal silhouette reads centred about
-     60% down, so a small negative margin rebalances it against the
-     left-column copy. Clamped so the shift scales with the mark itself. */
-  margin-top: clamp(-44px, -3.2vw, -20px);
+     60% down, so this clamped offset rebalances it against the
+     left-column copy while sitting slightly lower on the page. */
+  margin-top: clamp(-28px, calc(-3.2vw + 16px), -4px);
   pointer-events: none;
-  /* Chevron aspect-ratio is 18.09 × 33.12 ≈ 0.5462; match it so the
+  /* Chevron aspect-ratio is 18.09 × 29.727; match it so the
      absolutely-positioned canvas sibling overlays the SVG pixel-perfectly
      even before the SVG's intrinsic height resolves. */
-  aspect-ratio: 18.09 / 33.12;
+  aspect-ratio: 18.09 / 29.727;
 }
 
 .hero-chevron {
@@ -498,11 +512,8 @@ textarea {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  opacity: 0;
-  transition: opacity 1200ms cubic-bezier(0.22, 1, 0.36, 1) 520ms;
+  opacity: 1;
 }
-
-.hero-mark.is-revealed .hcg-liquid-gl-stack { opacity: 1; }
 
 /* Film-grain overlay — one per chevron slot so the texture inherits the
    slot's parallax transform (the grain drifts with the cursor exactly
@@ -537,6 +548,7 @@ textarea {
 .hero-mark .hcg-chev-slot {
   position: absolute;
   inset: 0;
+  opacity: 1;
   pointer-events: none;
   will-change: transform;
   /* Layered realistic elevation shadow.
@@ -572,13 +584,13 @@ textarea {
 /* Per-chevron mask URLs live on the slot so both the canvas inside it
    AND the slot's ::after grain inherit the same single-polygon mask. */
 .hero-mark .hcg-chev-slot[data-gl-chev="1"] {
-  --chev-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18.09 33.12' preserveAspectRatio='xMidYMid meet'><polygon points='0 11.76 0 16.15 17.96 4.39 17.96 0' fill='white'/></svg>");
+  --chev-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18.09 29.727' preserveAspectRatio='xMidYMid meet'><polygon points='0 11.76 0 16.15 17.96 4.39 17.96 0' fill='white'/></svg>");
 }
 .hero-mark .hcg-chev-slot[data-gl-chev="2"] {
-  --chev-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18.09 33.12' preserveAspectRatio='xMidYMid meet'><polygon points='.14 20.245 .14 24.635 18.09 12.875 18.09 8.485' fill='white'/></svg>");
+  --chev-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18.09 29.727' preserveAspectRatio='xMidYMid meet'><polygon points='.14 18.548 .14 22.938 18.09 11.178 18.09 6.788' fill='white'/></svg>");
 }
 .hero-mark .hcg-chev-slot[data-gl-chev="3"] {
-  --chev-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18.09 33.12' preserveAspectRatio='xMidYMid meet'><polygon points='.14 28.721 .14 33.121 18.09 21.361 18.09 16.971' fill='white'/></svg>");
+  --chev-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18.09 29.727' preserveAspectRatio='xMidYMid meet'><polygon points='.14 25.327 .14 29.727 18.09 17.967 18.09 13.577' fill='white'/></svg>");
 }
 
 .hero-chevron .hcg-bar {
@@ -631,7 +643,8 @@ textarea {
 .js .hero-mark .hcg-liquid-dark,
 .js .hero-mark .hcg-liquid-light,
 .js .hero-mark .hcg-grain-layer,
-.js .hero-mark .hcg-shine-group {
+.js .hero-mark .hcg-shine-group,
+.js .hero-mark .hcg-chev-slot {
   opacity: 0;
 }
 
@@ -673,14 +686,24 @@ textarea {
 /* ----- Spectacular staged entrance -----
    easeOutQuint (cubic-bezier(0.22, 1, 0.36, 1)) is the standard
    entrance curve used in Material/emphasized motion. */
-.js .hero-mark.is-revealed .hcg-bar-1 {
+.js .hero-mark.is-revealed .hcg-bar-3 {
   animation: hero-chev-enter 950ms cubic-bezier(0.22, 1, 0.36, 1) 280ms forwards;
 }
 .js .hero-mark.is-revealed .hcg-bar-2 {
   animation: hero-chev-enter 950ms cubic-bezier(0.22, 1, 0.36, 1) 420ms forwards;
 }
-.js .hero-mark.is-revealed .hcg-bar-3 {
+.js .hero-mark.is-revealed .hcg-bar-1 {
   animation: hero-chev-enter 950ms cubic-bezier(0.22, 1, 0.36, 1) 560ms forwards;
+}
+
+.js .hero-mark.is-revealed .hcg-chev-slot[data-gl-chev="3"] {
+  animation: hero-chev-slot-in 950ms cubic-bezier(0.22, 1, 0.36, 1) 280ms forwards;
+}
+.js .hero-mark.is-revealed .hcg-chev-slot[data-gl-chev="2"] {
+  animation: hero-chev-slot-in 950ms cubic-bezier(0.22, 1, 0.36, 1) 420ms forwards;
+}
+.js .hero-mark.is-revealed .hcg-chev-slot[data-gl-chev="1"] {
+  animation: hero-chev-slot-in 950ms cubic-bezier(0.22, 1, 0.36, 1) 560ms forwards;
 }
 
 @keyframes hero-chev-enter {
@@ -695,6 +718,11 @@ textarea {
     opacity: 1;
     transform: translate(0, 0) scale(1);
   }
+}
+
+@keyframes hero-chev-slot-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 
 /* After the bars settle, float the whole mark on its own track so the
@@ -787,8 +815,23 @@ textarea {
 }
 
 .hero h1 {
-  max-width: 12ch;
+  max-width: 15ch;
   font-size: clamp(3.5rem, 7vw, 6.6rem);
+}
+
+.hero-headline-strong,
+.hero-headline-italic {
+  display: block;
+}
+
+.hero-headline-strong {
+  font-size: 0.88em;
+  font-weight: 700;
+}
+
+.hero-headline-italic {
+  font-style: italic;
+  font-weight: 400;
 }
 
 .hero-lede,
@@ -1069,8 +1112,8 @@ main > .section + .section {
 
 .intake-grid {
   display: grid;
-  grid-template-columns: minmax(0, 0.84fr) minmax(360px, 1fr);
-  gap: 34px;
+  grid-template-columns: minmax(0, 0.92fr) minmax(360px, 1fr);
+  gap: clamp(18px, 2.4vw, 28px);
   align-items: start;
 }
 
@@ -1097,12 +1140,67 @@ main > .section + .section {
   margin-top: 6px;
 }
 
+.intake-collage {
+  width: min(100%, 510px);
+  margin: clamp(38px, 7vw, 82px) 0 0;
+}
+
+.intake-collage-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.84fr) minmax(0, 1.16fr);
+  grid-template-rows: repeat(2, clamp(152px, 12vw, 210px));
+  gap: 12px;
+}
+
+.intake-collage-tile {
+  border-radius: var(--cut-radius-sm);
+  box-shadow:
+    0 1px 2px rgba(26, 43, 58, 0.05),
+    0 12px 24px rgba(26, 43, 58, 0.09),
+    0 28px 48px rgba(26, 43, 58, 0.05);
+}
+
+.intake-collage-tile::after {
+  background:
+    radial-gradient(circle at 100% 0%, rgba(0, 147, 82, 0.32) 0, rgba(0, 147, 82, 0.16) 12%, transparent 28%),
+    radial-gradient(circle at 0% 100%, rgba(0, 147, 82, 0.24) 0, rgba(0, 147, 82, 0.10) 10%, transparent 24%);
+}
+
+.intake-collage-tile-trees {
+  grid-column: 1;
+  grid-row: 1;
+  --photo-scale: 1.04;
+  --photo-hover-scale: 1.1;
+  --reveal-delay: 0ms;
+}
+
+.intake-collage-tile-girls {
+  grid-column: 1;
+  grid-row: 2;
+  --photo-scale: 1.02;
+  --photo-hover-scale: 1.08;
+  --reveal-delay: 120ms;
+}
+
+.intake-collage-tile-man {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  --photo-scale: 1.01;
+  --photo-hover-scale: 1.06;
+  --reveal-delay: 220ms;
+}
+
 .values-marquee {
-  padding: 6px 0 0;
+  position: relative;
+  z-index: 2;
+  padding: 0;
   overflow: hidden;
+  background: #fff;
 }
 
 .values-marquee-viewport {
+  position: relative;
+  z-index: 1;
   width: 100%;
   overflow: hidden;
   border-top: 1px solid rgba(26, 43, 58, 0.08);
@@ -1173,36 +1271,58 @@ main > .section + .section {
   display: grid;
   grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
   gap: 44px;
-  align-items: start;
+  align-items: stretch;
 }
 
 .story-copy {
-  display: grid;
-  gap: 20px;
+  display: flex;
+  flex-direction: column;
+  align-self: stretch;
   max-width: 58ch;
 }
 
+.story-copy .eyebrow {
+  margin-bottom: 16px;
+}
+
+.story-copy h2 {
+  margin-bottom: 22px;
+}
+
 .story-copy p {
-  margin: 0;
+  margin: 0 0 18px;
   font-size: 1.02rem;
+}
+
+.story-copy p:last-of-type {
+  margin-bottom: 0;
+}
+
+.story-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-self: end;
+  margin-top: auto;
 }
 
 .story-collage {
   position: relative;
-  /* Bleed scales with viewport: (100vw - 1180px) / 2 covers the centering
-     margin so the grid reaches the viewport edge, plus ~120px of overhang.
-     This grows automatically on ultra-wide screens without a cap. */
-  width: calc(100% + max(80px, 50vw - 470px));
-  margin: 0 calc(-1 * max(80px, 50vw - 470px)) 0 0;
+  width: 100%;
+  margin: 0;
   padding-block: 12px;
-  justify-self: end;
 }
 
+/* Explicit row sizing: the top two rows are 80% of the bottom two so
+   the dollars + beach photos read shorter than the bottom-half tiles
+   without changing aspect within the grid layout. */
 .story-collage-grid {
   display: grid;
-  grid-template-columns: 1.2fr 0.9fr 0.85fr 0.85fr;
-  grid-auto-rows: clamp(118px, 9.5vw, 152px);
-  gap: 18px 12px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-rows:
+    repeat(2, clamp(96px, 8.8vw, 126px))
+    repeat(2, clamp(120px, 11vw, 158px));
+  gap: 14px;
   align-items: stretch;
 }
 
@@ -1211,9 +1331,11 @@ main > .section + .section {
   --ox: 0px;
   --oy: 0px;
   --z: 1;
+  --photo-scale: 1;
+  --photo-hover-scale: 1.06;
   position: relative;
   overflow: hidden;
-  border: 1px solid rgba(26, 43, 58, 0.05);
+  border: 0;
   background: rgba(255, 255, 255, 0.86);
   border-radius: var(--cut-radius-md);
   transform:
@@ -1238,7 +1360,8 @@ main > .section + .section {
 }
 
 .story-collage-tile picture,
-.process-photo-chip picture {
+.process-photo-chip picture,
+.split-photo-chip picture {
   display: block;
   width: 100%;
   height: 100%;
@@ -1255,13 +1378,13 @@ main > .section + .section {
      rotation snap), just the photo inside scales gently. The
      transform-origin sits at the centre so the crop expands evenly
      under the tile's clipped frame. */
-  transform: scale(1);
+  transform: scale(var(--photo-scale));
   transform-origin: 50% 50%;
   transition: transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .story-collage-tile:hover img {
-  transform: scale(1.06);
+  transform: scale(var(--photo-hover-scale));
 }
 
 .js .story-collage-tile[data-animate] {
@@ -1281,82 +1404,48 @@ main > .section + .section {
     rotate(var(--rot));
 }
 
-/* Per-tile placements. The grid lays out the basic 4-col / 4-row
-   structure; the per-tile --oy / --ox custom properties shift each
-   tile off its grid cell to break row and column alignment, producing
-   a scattered, cascading feel without ever rotating the tiles. --z
-   sets stacking order for the cases where translations cause two
-   tiles to overlap. */
+/* Per-tile placements on a 3-col × 4-row grid. All gaps are uniform
+   (single grid `gap` value). Top half: LARGE feature photo flanked by
+   PORTRAIT. Bottom half: DOCS portrait on the left, two split tiles
+   (MONEY square + TRANSIT square) on the right of row 3, then LIFE
+   wide landscape on row 4. The split-then-merge cadence on the right
+   side breaks the otherwise-uniform row alignment. */
 .story-collage-tile-large {
   grid-column: 1 / span 2;
   grid-row: 1 / span 2;
-  --oy: 0px;
-  --ox: 0px;
-  --z: 2;
+  --photo-scale: 1.38;
+  --photo-hover-scale: 1.44;
   --reveal-delay: 0ms;
 }
 
 .story-collage-tile-portrait {
   grid-column: 3;
   grid-row: 1 / span 2;
-  --oy: 38px;
-  --ox: -6px;
-  --z: 4;
-  --reveal-delay: 80ms;
-}
-
-.story-collage-tile-family-1 {
-  grid-column: 4;
-  grid-row: 1 / span 2;
-  --oy: -12px;
-  --ox: 4px;
-  --z: 3;
-  --reveal-delay: 160ms;
+  --reveal-delay: 100ms;
 }
 
 .story-collage-tile-docs {
   grid-column: 1;
   grid-row: 3 / span 2;
-  --oy: 22px;
-  --ox: -4px;
-  --z: 2;
-  --reveal-delay: 240ms;
+  --reveal-delay: 200ms;
 }
 
 .story-collage-tile-money {
-  grid-column: 2 / span 2;
+  grid-column: 2;
   grid-row: 3;
-  --oy: -8px;
-  --ox: 6px;
-  --z: 5;
-  --reveal-delay: 320ms;
+  --reveal-delay: 300ms;
 }
 
-.story-collage-tile-family-2 {
-  grid-column: 4;
+.story-collage-tile-transit {
+  grid-column: 3;
   grid-row: 3;
-  --oy: 30px;
-  --ox: -8px;
-  --z: 6;
   --reveal-delay: 400ms;
 }
 
 .story-collage-tile-life {
   grid-column: 2 / span 2;
   grid-row: 4;
-  --oy: 14px;
-  --ox: 2px;
-  --z: 1;
-  --reveal-delay: 480ms;
-}
-
-.story-collage-tile-transit {
-  grid-column: 4;
-  grid-row: 4;
-  --oy: -18px;
-  --ox: -4px;
-  --z: 4;
-  --reveal-delay: 560ms;
+  --reveal-delay: 500ms;
 }
 
 .stock-photo-frame {
@@ -1409,6 +1498,20 @@ main > .section + .section {
 
 .band-copy h2 {
   color: #fff;
+}
+
+.band-headline-strong,
+.band-headline-italic {
+  display: block;
+}
+
+.band-headline-strong {
+  font-weight: 700;
+}
+
+.band-headline-italic {
+  font-style: italic;
+  font-weight: 400;
 }
 
 .section-heading {
@@ -1477,8 +1580,8 @@ main > .section + .section {
   height: 100%;
   min-height: 0;
   overflow: hidden;
-  border-radius: var(--radius-md) 0 var(--radius-md) 0;
-  border: 1px solid rgba(26, 43, 58, 0.08);
+  border-radius: 0 var(--radius-md) 0 var(--radius-md);
+  border: 0;
   background: rgba(26, 43, 58, 0.08);
   box-shadow: 0 18px 38px rgba(26, 43, 58, 0.1);
 }
@@ -1502,14 +1605,16 @@ main > .section + .section {
   inset: 0;
   z-index: 1;
   background:
-    linear-gradient(180deg, rgba(26, 43, 58, 0.3) 0%, rgba(26, 43, 58, 0.1) 32%, rgba(26, 43, 58, 0.02) 100%),
-    radial-gradient(circle at 88% 16%, rgba(0, 147, 82, 0.12), transparent 28%);
+    linear-gradient(180deg, rgba(26, 43, 58, 0.08) 0%, rgba(26, 43, 58, 0.02) 46%, transparent 100%);
   pointer-events: none;
 }
 
 .process-photo-chip.stock-photo-frame::after {
   z-index: 2;
   border-radius: inherit;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(0, 147, 82, 0.28) 0, rgba(0, 147, 82, 0.12) 10%, transparent 24%),
+    radial-gradient(circle at 0% 100%, rgba(0, 147, 82, 0.20) 0, rgba(0, 147, 82, 0.08) 9%, transparent 21%);
 }
 
 .process-intro-copy {
@@ -1808,17 +1913,17 @@ main > .section + .section {
 
 .split-panel-focus {
   display: grid;
-  grid-template-columns: minmax(0, 0.86fr) minmax(300px, 0.54fr);
-  grid-template-rows: auto auto auto;
-  column-gap: clamp(26px, 5vw, 70px);
-  row-gap: clamp(16px, 2vw, 24px);
+  grid-template-columns: minmax(0, 0.9fr) minmax(300px, 0.62fr);
+  grid-template-rows: auto auto auto minmax(48px, 1fr) auto;
+  column-gap: clamp(34px, 5vw, 76px);
+  row-gap: clamp(14px, 1.8vw, 22px);
   align-items: start;
   min-height: clamp(390px, 36vw, 470px);
-  padding: clamp(30px, 5.4vw, 72px);
+  padding: 34px;
 }
 
 .split-panel-focus .eyebrow {
-  grid-column: 1 / -1;
+  grid-column: 1;
   grid-row: 1;
   margin-bottom: 0;
 }
@@ -1831,10 +1936,38 @@ main > .section + .section {
 }
 
 .split-panel-focus .feature-list {
-  grid-column: 2;
-  grid-row: 2;
+  grid-column: 1;
+  grid-row: 3;
   align-self: start;
+  max-width: 44ch;
   margin-top: 0;
+}
+
+.split-photo-chip {
+  position: relative;
+  grid-column: 2;
+  grid-row: 1 / -1;
+  align-self: stretch;
+  margin: 0;
+  min-height: clamp(300px, 27vw, 420px);
+  overflow: hidden;
+  border-radius: 0 var(--radius-md) 0 var(--radius-md);
+  box-shadow: 0 22px 54px rgba(0, 0, 0, 0.22);
+}
+
+.split-photo-chip img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: saturate(0.9) contrast(1.02);
+}
+
+.split-photo-chip.stock-photo-frame::after {
+  border-radius: inherit;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(0, 147, 82, 0.30) 0, rgba(0, 147, 82, 0.12) 10%, transparent 24%),
+    radial-gradient(circle at 0% 100%, rgba(0, 147, 82, 0.20) 0, rgba(0, 147, 82, 0.08) 9%, transparent 21%);
 }
 
 .split-panel-focus .feature-list li {
@@ -1842,11 +1975,11 @@ main > .section + .section {
 }
 
 .split-panel-actions {
-  grid-column: 2;
-  grid-row: 3;
-  justify-self: end;
-  align-self: start;
-  margin-top: clamp(2px, 1vw, 10px);
+  grid-column: 1;
+  grid-row: 5;
+  justify-self: start;
+  align-self: end;
+  margin-top: 0;
 }
 
 .need-cloud {
@@ -2065,6 +2198,179 @@ main > .section + .section {
   padding-left: 20px;
 }
 
+.faq-accordion {
+  display: grid;
+  gap: 14px;
+  margin-top: 24px;
+}
+
+.faq-item {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(26, 43, 58, 0.1);
+  border-radius: var(--cut-radius-md);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.98));
+  box-shadow:
+    0 1px 2px rgba(26, 43, 58, 0.04),
+    0 18px 42px rgba(26, 43, 58, 0.07);
+  transition:
+    border-color var(--transition),
+    box-shadow var(--transition);
+}
+
+.faq-item::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 4px;
+  background: linear-gradient(180deg, var(--green), rgba(0, 147, 82, 0));
+  opacity: 0;
+  transition: opacity var(--transition);
+}
+
+.faq-item[open]::before {
+  opacity: 1;
+}
+
+.faq-item[open] {
+  border-color: rgba(0, 147, 82, 0.18);
+  box-shadow:
+    0 1px 2px rgba(26, 43, 58, 0.04),
+    0 22px 50px rgba(26, 43, 58, 0.09);
+}
+
+.faq-item summary {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 42px;
+  gap: 18px;
+  align-items: center;
+  min-height: 84px;
+  padding: 24px 28px;
+  cursor: pointer;
+  color: var(--navy);
+  font-family: "Nord", "Helvetica Neue", sans-serif;
+  font-size: clamp(1rem, 1.4vw, 1.12rem);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  line-height: 1.24;
+  text-transform: uppercase;
+  list-style: none;
+}
+
+.faq-item summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq-item summary::after {
+  content: "+";
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border: 1px solid rgba(26, 43, 58, 0.12);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--green);
+  font-family: "Nord", "Helvetica Neue", sans-serif;
+  font-size: 1.25rem;
+  line-height: 1;
+  transition:
+    transform var(--transition),
+    background var(--transition),
+    color var(--transition);
+}
+
+.faq-item[open] summary::after {
+  content: "-";
+  transform: rotate(180deg);
+  background: var(--navy);
+  color: #fff;
+}
+
+.faq-answer {
+  height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(-8px);
+  transition:
+    height 420ms cubic-bezier(0.2, 0.7, 0.2, 1),
+    opacity 320ms ease,
+    transform 420ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.faq-item[open] .faq-answer {
+  height: auto;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.faq-item.is-closing .faq-answer {
+  opacity: 0;
+  transform: translateY(-8px);
+}
+
+.faq-answer p {
+  max-width: 78ch;
+  margin: 0;
+  padding: 0 28px 28px;
+  color: var(--text-soft);
+}
+
+.page-cta-panel {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: clamp(24px, 5vw, 64px);
+  align-items: end;
+  margin-top: 28px;
+  padding: clamp(30px, 5vw, 54px);
+  overflow: hidden;
+  border-radius: var(--cut-radius-lg);
+  background:
+    var(--grid-dark),
+    radial-gradient(circle at 92% 8%, rgba(0, 147, 82, 0.12), transparent 34%),
+    radial-gradient(circle at 0% 100%, rgba(0, 147, 82, 0.08), transparent 30%),
+    linear-gradient(180deg, #1A2B3A 0%, #142433 100%);
+  background-size: 120px 120px, auto, auto, auto;
+  box-shadow: 0 26px 70px rgba(26, 43, 58, 0.22);
+  color: #fff;
+}
+
+.page-cta-panel > * {
+  position: relative;
+  z-index: 1;
+}
+
+.page-cta-panel .eyebrow {
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.page-cta-panel h2 {
+  max-width: 14ch;
+  margin: 0;
+  color: #fff;
+  font-family: "Noe Display", Georgia, serif;
+  font-size: clamp(2.2rem, 4.7vw, 4.4rem);
+  font-weight: 500;
+  line-height: 0.98;
+  letter-spacing: -0.03em;
+}
+
+.page-cta-panel p:not(.eyebrow) {
+  max-width: 48ch;
+  margin: 18px 0 0;
+  color: rgba(255, 255, 255, 0.76);
+}
+
+.page-cta-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 14px;
+}
+
 @media (max-width: 1080px) {
   .header-inner,
   .hero-grid,
@@ -2072,6 +2378,7 @@ main > .section + .section {
   .band-card,
   .split-grid,
   .cta-card,
+  .page-cta-panel,
   .footer-grid,
   .page-grid {
     grid-template-columns: 1fr;
@@ -2121,31 +2428,26 @@ main > .section + .section {
     padding-top: 0;
   }
 
+  .intake-collage {
+    width: min(100%, 560px);
+    margin-top: 42px;
+  }
+
+  .intake-collage-grid {
+    grid-template-rows: repeat(2, clamp(148px, 22vw, 210px));
+  }
+
   .process-steps-wrap::before {
     left: calc(25% + 44px);
     right: calc(25% + 44px);
   }
 
-  .story-collage {
-    width: calc(100% + clamp(20px, 8vw, 80px));
-    margin-right: calc(-1 * clamp(20px, 8vw, 80px));
-  }
-
   .story-collage-grid {
-    grid-auto-rows: 110px;
-    gap: 14px 10px;
+    grid-template-rows:
+      repeat(2, clamp(88px, 12.8vw, 120px))
+      repeat(2, clamp(110px, 16vw, 150px));
+    gap: 12px;
   }
-
-  /* Halve the per-tile offsets at the narrower 1-column-copy layout so
-     tiles don't push so far off alignment that they overlap awkwardly. */
-  .story-collage-tile-large    { --oy: 0px;   --ox: 0px;  }
-  .story-collage-tile-portrait { --oy: 18px;  --ox: -3px; }
-  .story-collage-tile-family-1 { --oy: -6px;  --ox: 2px;  }
-  .story-collage-tile-docs     { --oy: 12px;  --ox: -2px; }
-  .story-collage-tile-money    { --oy: -4px;  --ox: 3px;  }
-  .story-collage-tile-family-2 { --oy: 16px;  --ox: -4px; }
-  .story-collage-tile-life     { --oy: 8px;   --ox: 1px;  }
-  .story-collage-tile-transit  { --oy: -10px; --ox: -2px; }
 
   .site-nav {
     justify-content: start;
@@ -2176,6 +2478,7 @@ main > .section + .section {
 
   .split-panel-focus h2,
   .split-panel-focus .feature-list,
+  .split-photo-chip,
   .split-panel-actions {
     grid-column: 1;
     grid-row: auto;
@@ -2183,6 +2486,12 @@ main > .section + .section {
 
   .split-panel-focus .feature-list {
     margin-top: 8px;
+  }
+
+  .split-photo-chip {
+    width: min(100%, 430px);
+    min-height: 230px;
+    aspect-ratio: 16 / 10;
   }
 
   .section-heading {
@@ -2247,6 +2556,29 @@ main > .section + .section {
     padding: 24px;
   }
 
+  .faq-item summary {
+    grid-template-columns: minmax(0, 1fr) 38px;
+    min-height: 74px;
+    padding: 22px 24px;
+  }
+
+  .faq-item summary::after {
+    width: 38px;
+    height: 38px;
+  }
+
+  .faq-answer {
+    padding: 0;
+  }
+
+  .faq-answer p {
+    padding: 0 24px 24px;
+  }
+
+  .page-cta-actions {
+    justify-content: flex-start;
+  }
+
   .hero h1,
   .page-shell h1 {
     font-size: clamp(2.6rem, 13vw, 4rem);
@@ -2274,6 +2606,16 @@ main > .section + .section {
     letter-spacing: 0.04em;
   }
 
+  .intake-collage {
+    width: 100%;
+    margin-top: 30px;
+  }
+
+  .intake-collage-grid {
+    grid-template-rows: repeat(2, clamp(124px, 34vw, 176px));
+    gap: 10px;
+  }
+
   .hero-rotator-line {
     flex-wrap: wrap;
   }
@@ -2283,37 +2625,45 @@ main > .section + .section {
   }
 
   .story-collage {
-    /* Full-width on phones, no bleed — the page gutter stays visually
-       intact on small viewports where edge-bleed reads as broken. */
-    width: 100%;
-    margin: 0;
     padding-block: 8px;
   }
 
   .story-collage-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: none;
     grid-auto-rows: 124px;
-    gap: 14px;
+    gap: 12px;
   }
 
   .story-collage-tile,
   .story-collage-tile-large,
   .story-collage-tile-portrait,
-  .story-collage-tile-family-1,
   .story-collage-tile-docs,
   .story-collage-tile-money,
-  .story-collage-tile-family-2,
   .story-collage-tile-life,
   .story-collage-tile-transit {
     grid-column: auto;
     grid-row: auto;
-    --oy: 0px;
-    --ox: 0px;
   }
 
   .story-collage-tile-large,
   .story-collage-tile-docs {
     grid-row: span 2;
+  }
+
+  .intake-collage-tile-trees {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .intake-collage-tile-girls {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .intake-collage-tile-man {
+    grid-column: 2;
+    grid-row: 1 / span 2;
   }
 
   .steps-grid,
@@ -2353,6 +2703,10 @@ main > .section + .section {
     transform: none;
   }
 
+  .js .hero-mark .hcg-chev-slot {
+    opacity: 1;
+  }
+
   .js .hero-mark .hcg-liquid-dark,
   .js .hero-mark .hcg-liquid-light {
     opacity: 1;
@@ -2374,7 +2728,8 @@ main > .section + .section {
   .js .hero-mark.is-revealed .hcg-liquid-dark,
   .js .hero-mark.is-revealed .hcg-liquid-light,
   .js .hero-mark.is-revealed .hcg-grain-layer,
-  .js .hero-mark.is-revealed .hcg-shine-group {
+  .js .hero-mark.is-revealed .hcg-shine-group,
+  .js .hero-mark.is-revealed .hcg-chev-slot {
     animation: none;
   }
 
