@@ -24,6 +24,7 @@
   --container: min(1180px, calc(100vw - 40px));
   --section-space: clamp(60px, 7vw, 84px);
   --transition: 220ms ease;
+  --hero-load-ease: cubic-bezier(0.13, 1.08, 0.18, 1);
   --grid-light: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cg fill='none' stroke='%231A2B3A' stroke-opacity='.04' stroke-width='1'%3E%3Cpath d='M0 .5H120M0 30.5H120M0 60.5H120M0 90.5H120M.5 0V120M30.5 0V120M60.5 0V120M90.5 0V120'/%3E%3C/g%3E%3C/svg%3E");
   --grid-dark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cg fill='none' stroke='white' stroke-opacity='.08' stroke-width='1'%3E%3Cpath d='M0 .5H120M0 30.5H120M0 60.5H120M0 90.5H120M.5 0V120M30.5 0V120M60.5 0V120M90.5 0V120'/%3E%3C/g%3E%3C/svg%3E");
   --chevron-mark: url("../img/brand/chevron-mark.svg");
@@ -198,6 +199,22 @@ textarea {
   min-height: 76px;
 }
 
+.brand,
+.site-nav a,
+.header-actions > *,
+.menu-toggle,
+.hero-copy > .eyebrow,
+.hero-copy h1,
+.hero-rotator-line,
+.hero-lede,
+.hero-actions .button {
+  animation-fill-mode: both;
+}
+
+.brand {
+  animation: hero-load-left 1500ms var(--hero-load-ease, cubic-bezier(0.16, 1, 0.22, 1)) 90ms both;
+}
+
 .brand {
   width: min(182px, 36vw);
 }
@@ -215,6 +232,22 @@ textarea {
   font-weight: 500;
   letter-spacing: 0.03em;
   color: var(--text-soft);
+}
+
+.site-nav a {
+  animation: hero-load-down 1350ms var(--hero-load-ease, cubic-bezier(0.16, 1, 0.22, 1)) both;
+}
+
+.site-nav a:nth-child(1) {
+  animation-delay: 180ms;
+}
+
+.site-nav a:nth-child(2) {
+  animation-delay: 260ms;
+}
+
+.site-nav a:nth-child(3) {
+  animation-delay: 340ms;
 }
 
 .site-nav a,
@@ -255,6 +288,18 @@ textarea {
   display: flex;
   align-items: center;
   gap: 18px;
+}
+
+.header-actions > * {
+  animation: hero-load-right 1450ms var(--hero-load-ease, cubic-bezier(0.16, 1, 0.22, 1)) both;
+}
+
+.header-actions > *:nth-child(1) {
+  animation-delay: 300ms;
+}
+
+.header-actions > *:nth-child(2) {
+  animation-delay: 400ms;
 }
 
 .header-phone {
@@ -450,6 +495,102 @@ textarea {
   }
   100% {
     transform: translate3d(calc(-1 * var(--marquee-loop-width, 50%)), 0, 0);
+  }
+}
+
+@keyframes hero-load-down {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, -34px, 0) scale(0.96);
+    filter: blur(10px);
+  }
+  58% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes hero-load-left {
+  0% {
+    opacity: 0;
+    transform: translate3d(-44px, 10px, 0) scale(0.97);
+    filter: blur(12px);
+  }
+  58% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes hero-load-right {
+  0% {
+    opacity: 0;
+    transform: translate3d(38px, -8px, 0) scale(0.98);
+    filter: blur(10px);
+  }
+  58% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes hero-load-right-strong {
+  0% {
+    opacity: 0;
+    transform: translate3d(76px, 18px, 0) scale(0.94);
+    filter: blur(14px);
+  }
+  54% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes hero-load-up {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 42px, 0) scale(0.98);
+    filter: blur(10px);
+  }
+  58% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes hero-load-up-strong {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 54px, 0) scale(0.94);
+    filter: blur(12px);
+  }
+  56% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+    filter: blur(0);
   }
 }
 
@@ -764,6 +905,14 @@ textarea {
   max-width: 760px;
 }
 
+.hero-copy > .eyebrow {
+  animation: hero-load-left 1500ms var(--hero-load-ease) 420ms both;
+}
+
+.hero-copy h1 {
+  animation: hero-load-right-strong 1800ms var(--hero-load-ease) 560ms both;
+}
+
 /* Soft radial halo behind the hero copy so the headline and paragraph rest
    on a legible cushion even when a bright wave of dots rolls through. The
    canvas-side text-safe attenuator already dims dots here; this gradient
@@ -870,6 +1019,7 @@ textarea {
   font-size: 1rem;
   letter-spacing: 0.03em;
   text-transform: uppercase;
+  animation: hero-load-left 1600ms var(--hero-load-ease) 760ms both;
 }
 
 .word-rotator {
@@ -899,6 +1049,22 @@ textarea {
   flex-wrap: wrap;
   gap: 14px;
   margin-top: 30px;
+}
+
+.hero-lede {
+  animation: hero-load-up 1600ms var(--hero-load-ease) 900ms both;
+}
+
+.hero-actions .button {
+  animation: hero-load-up-strong 1700ms var(--hero-load-ease) both;
+}
+
+.hero-actions .button:nth-child(1) {
+  animation-delay: 1080ms;
+}
+
+.hero-actions .button:nth-child(2) {
+  animation-delay: 1200ms;
 }
 
 .trust-points {
@@ -2823,6 +2989,7 @@ main > .section + .section {
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
+    animation-delay: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
