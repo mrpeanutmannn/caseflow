@@ -763,25 +763,26 @@ if (wordTrack && wordRotator) {
     void main() { gl_Position = vec4(a_pos, 0.0, 1.0); }
   `;
 
-  // Fragment shader — slimmed-down version of the original
-  // domain-warped fBm pattern. Decisions:
+  // Fragment shader — domain-warped fBm pattern. Decisions:
   //
-  //   * 2 octaves of fBm (was 4). Visually identical at this motion
-  //     speed because we only use the noise to drive a binary-ish
-  //     navy/green mix; high-frequency detail is never resolved by
-  //     the colour ramp.
-  //   * ONE domain warp pass (was 2). The second pass added subtle
-  //     fluid "swirl" that nobody can perceive at u_time*0.008.
-  //   * No u_mouse uniform / no cursor coupling. The previous 0.08
-  //     amplitude was below the perceptual threshold; removing it
-  //     lets us drop the global mousemove listener too.
+  //   * 2 octaves of fBm (vs. 4 in the original). Visually identical
+  //     at this motion speed because the noise only drives a binary-
+  //     ish navy/green mix; high-frequency detail is never resolved
+  //     by the colour ramp.
+  //   * Two domain-warp passes — the second pass feeds the first back
+  //     in with different phases and a partially negated time term so
+  //     the field genuinely swirls instead of just translating. With
+  //     the speed bumped to t*0.015 the swirl is finally visible.
+  //   * Per-chevron parallax is applied as a CSS transform on the
+  //     slot wrapping the canvas, so the shader itself doesn't need a
+  //     u_mouse uniform — the field translates in lockstep with the
+  //     drop-shadow filter living on the same parent.
   //   * No per-pixel grain (moved to a CSS overlay, see style.css).
-  //   * No luminance sweep — the per-chevron drop-shadow already
-  //     gives the depth cue the sweep was simulating.
   //   * mediump precision retained — lowp distorts the simplex noise
   //     distribution enough to skew the navy/green ratio noticeably.
   //
-  // Net cost reduction vs. the original: 20 noise samples/pixel → 6.
+  // Cost: 10 noise samples/pixel (5 fbm calls × 2 octaves), still
+  // comfortably below the original 20-sample budget.
   const fragSrc = `
     precision mediump float;
     uniform float u_time;
@@ -826,22 +827,27 @@ if (wordTrack && wordRotator) {
       uv.x *= u_resolution.x / u_resolution.y;
 
       vec2  p = uv * 0.35;        // feature scale
-      float t = u_time * 0.008;   // very slow flow
+      float t = u_time * 0.015;   // gentle flow, ~2x previous speed
 
-      // Single domain-warp pass — enough to break up the obvious noise
-      // structure into organic blob shapes.
+      // Two-pass domain warp. q deforms the input into organic blobs;
+      // r feeds q back into another fbm sample with different phases /
+      // time signs so the field swirls like a slow viscous liquid
+      // instead of just translating. Cost: 5 fbm calls × 2 octaves =
+      // 10 noise samples/pixel (vs. 6 with a single warp), still
+      // comfortably under the original 20-sample budget.
       vec2 q = vec2(
-        fbm(p + vec2(0.0, 0.0) + t * 0.8),
-        fbm(p + vec2(5.2, 1.3) + t * 0.7)
+        fbm(p + vec2(0.0, 0.0) + t * 0.80),
+        fbm(p + vec2(5.2, 1.3) + t * 0.70)
       );
-      float n = fbm(p + 0.45 * q);
+      vec2 r = vec2(
+        fbm(p + 0.55 * q + vec2(1.7, 9.2) - t * 0.55),
+        fbm(p + 0.55 * q + vec2(8.3, 2.8) + t * 0.45)
+      );
+      float n = fbm(p + 0.55 * r);
       n = smoothstep(-0.9, 0.9, n);
 
-      // Two-colour brand mix. With 2 octaves + 1 warp the noise
-      // distribution clusters tighter around 0.5 than the original
-      // 4-octave/2-warp version, so the smoothstep range is shifted
-      // up (0.68→0.95 vs 0.55→0.95) to keep the navy/green ratio at
-      // ~75%/25% — recalibrated empirically against snapshots.
+      // Two-colour brand mix. Smoothstep range tuned empirically to
+      // keep the navy/green ratio at ~75%/25%.
       vec3 col = mix(
         vec3(0.102, 0.169, 0.227),   // #1A2B3A — brand navy
         vec3(0.000, 0.576, 0.322),   // #009352 — brand green

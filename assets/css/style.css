@@ -504,18 +504,12 @@ textarea {
 
 .hero-mark.is-revealed .hcg-liquid-gl-stack { opacity: 1; }
 
-/* Film-grain overlay — replaces the per-pixel grain hash that used to
-   run inside the WebGL shader on every frame. SVG <feTurbulence>
-   rasterises once at page load, then the browser composites it as a
-   single GPU-cached layer with `mix-blend-mode: overlay`. Total
-   ongoing cost is essentially zero versus the previous per-pixel
-   noise computation across ~3.75M pixels every frame.
-
-   The same three-polygon mask used by the canvases keeps the grain
-   confined to the chevron shapes so it doesn't bleed across the page
-   gutter. Only shown when GL is active so the SVG fallback path
-   (which has its own grain group) doesn't double up. */
-.hero-mark.has-gl-liquid .hcg-liquid-gl-stack::after {
+/* Film-grain overlay — one per chevron slot so the texture inherits the
+   slot's parallax transform (the grain drifts with the cursor exactly
+   like the WebGL canvas inside the same slot). Each slot exposes a
+   --chev-mask custom property holding its single-polygon mask URL; the
+   ::after picks it up via inheritance, as does the canvas itself. */
+.hero-mark.has-gl-liquid .hcg-chev-slot::after {
   content: "";
   position: absolute;
   inset: 0;
@@ -525,10 +519,10 @@ textarea {
   background-repeat: repeat;
   mix-blend-mode: overlay;
   opacity: 0.55;
-  -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18.09 33.12' preserveAspectRatio='xMidYMid meet'><polygon points='0 11.76 0 16.15 17.96 4.39 17.96 0' fill='white'/><polygon points='.14 20.245 .14 24.635 18.09 12.875 18.09 8.485' fill='white'/><polygon points='.14 28.721 .14 33.121 18.09 21.361 18.09 16.971' fill='white'/></svg>");
+  -webkit-mask-image: var(--chev-mask);
   -webkit-mask-size: 100% 100%;
   -webkit-mask-repeat: no-repeat;
-  mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18.09 33.12' preserveAspectRatio='xMidYMid meet'><polygon points='0 11.76 0 16.15 17.96 4.39 17.96 0' fill='white'/><polygon points='.14 20.245 .14 24.635 18.09 12.875 18.09 8.485' fill='white'/><polygon points='.14 28.721 .14 33.121 18.09 21.361 18.09 16.971' fill='white'/></svg>");
+  mask-image: var(--chev-mask);
   mask-size: 100% 100%;
   mask-repeat: no-repeat;
 }
@@ -567,27 +561,24 @@ textarea {
   height: 100%;
   display: block;
   pointer-events: none;
+  -webkit-mask-image: var(--chev-mask);
   -webkit-mask-size: 100% 100%;
   -webkit-mask-repeat: no-repeat;
+  mask-image: var(--chev-mask);
   mask-size: 100% 100%;
   mask-repeat: no-repeat;
 }
 
-/* Per-chevron masks — each canvas is clipped to a SINGLE polygon, so the
-   three stack together without overlapping visible regions. The viewBox
-   and preserveAspectRatio match the parent SVG so the masks line up with
-   the bar polygons pixel-for-pixel. */
-.hero-mark .hcg-liquid-gl[data-gl-chev="1"] {
-  -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18.09 33.12' preserveAspectRatio='xMidYMid meet'><polygon points='0 11.76 0 16.15 17.96 4.39 17.96 0' fill='white'/></svg>");
-  mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18.09 33.12' preserveAspectRatio='xMidYMid meet'><polygon points='0 11.76 0 16.15 17.96 4.39 17.96 0' fill='white'/></svg>");
+/* Per-chevron mask URLs live on the slot so both the canvas inside it
+   AND the slot's ::after grain inherit the same single-polygon mask. */
+.hero-mark .hcg-chev-slot[data-gl-chev="1"] {
+  --chev-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18.09 33.12' preserveAspectRatio='xMidYMid meet'><polygon points='0 11.76 0 16.15 17.96 4.39 17.96 0' fill='white'/></svg>");
 }
-.hero-mark .hcg-liquid-gl[data-gl-chev="2"] {
-  -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18.09 33.12' preserveAspectRatio='xMidYMid meet'><polygon points='.14 20.245 .14 24.635 18.09 12.875 18.09 8.485' fill='white'/></svg>");
-  mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18.09 33.12' preserveAspectRatio='xMidYMid meet'><polygon points='.14 20.245 .14 24.635 18.09 12.875 18.09 8.485' fill='white'/></svg>");
+.hero-mark .hcg-chev-slot[data-gl-chev="2"] {
+  --chev-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18.09 33.12' preserveAspectRatio='xMidYMid meet'><polygon points='.14 20.245 .14 24.635 18.09 12.875 18.09 8.485' fill='white'/></svg>");
 }
-.hero-mark .hcg-liquid-gl[data-gl-chev="3"] {
-  -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18.09 33.12' preserveAspectRatio='xMidYMid meet'><polygon points='.14 28.721 .14 33.121 18.09 21.361 18.09 16.971' fill='white'/></svg>");
-  mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18.09 33.12' preserveAspectRatio='xMidYMid meet'><polygon points='.14 28.721 .14 33.121 18.09 21.361 18.09 16.971' fill='white'/></svg>");
+.hero-mark .hcg-chev-slot[data-gl-chev="3"] {
+  --chev-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18.09 33.12' preserveAspectRatio='xMidYMid meet'><polygon points='.14 28.721 .14 33.121 18.09 21.361 18.09 16.971' fill='white'/></svg>");
 }
 
 .hero-chevron .hcg-bar {
@@ -1116,9 +1107,7 @@ main > .section + .section {
   overflow: hidden;
   border-top: 1px solid rgba(26, 43, 58, 0.08);
   border-bottom: 1px solid rgba(26, 43, 58, 0.08);
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.62), rgba(255, 255, 255, 0.36)),
-    radial-gradient(circle at left center, rgba(0, 147, 82, 0.06), transparent 24%);
+  background: #fff;
 }
 
 .values-marquee-track {
@@ -1213,7 +1202,7 @@ main > .section + .section {
   display: grid;
   grid-template-columns: 1.2fr 0.9fr 0.85fr 0.85fr;
   grid-auto-rows: clamp(118px, 9.5vw, 152px);
-  gap: 14px;
+  gap: 18px 12px;
   align-items: stretch;
 }
 
@@ -1221,6 +1210,7 @@ main > .section + .section {
   --rot: 0deg;
   --ox: 0px;
   --oy: 0px;
+  --z: 1;
   position: relative;
   overflow: hidden;
   border: 1px solid rgba(26, 43, 58, 0.05);
@@ -1233,7 +1223,7 @@ main > .section + .section {
     0 1px 2px rgba(26, 43, 58, 0.06),
     0 14px 28px rgba(26, 43, 58, 0.10),
     0 38px 64px rgba(26, 43, 58, 0.06);
-  z-index: 1;
+  z-index: var(--z);
 }
 
 .story-collage-tile::after {
@@ -1291,52 +1281,81 @@ main > .section + .section {
     rotate(var(--rot));
 }
 
-/* Bento grid placements — 4 columns, 4 rows, no rotation. */
+/* Per-tile placements. The grid lays out the basic 4-col / 4-row
+   structure; the per-tile --oy / --ox custom properties shift each
+   tile off its grid cell to break row and column alignment, producing
+   a scattered, cascading feel without ever rotating the tiles. --z
+   sets stacking order for the cases where translations cause two
+   tiles to overlap. */
 .story-collage-tile-large {
   grid-column: 1 / span 2;
   grid-row: 1 / span 2;
+  --oy: 0px;
+  --ox: 0px;
+  --z: 2;
   --reveal-delay: 0ms;
 }
 
 .story-collage-tile-portrait {
   grid-column: 3;
   grid-row: 1 / span 2;
+  --oy: 38px;
+  --ox: -6px;
+  --z: 4;
   --reveal-delay: 80ms;
 }
 
 .story-collage-tile-family-1 {
   grid-column: 4;
   grid-row: 1 / span 2;
+  --oy: -12px;
+  --ox: 4px;
+  --z: 3;
   --reveal-delay: 160ms;
 }
 
 .story-collage-tile-docs {
   grid-column: 1;
   grid-row: 3 / span 2;
+  --oy: 22px;
+  --ox: -4px;
+  --z: 2;
   --reveal-delay: 240ms;
 }
 
 .story-collage-tile-money {
   grid-column: 2 / span 2;
   grid-row: 3;
+  --oy: -8px;
+  --ox: 6px;
+  --z: 5;
   --reveal-delay: 320ms;
 }
 
 .story-collage-tile-family-2 {
   grid-column: 4;
   grid-row: 3;
+  --oy: 30px;
+  --ox: -8px;
+  --z: 6;
   --reveal-delay: 400ms;
 }
 
 .story-collage-tile-life {
   grid-column: 2 / span 2;
   grid-row: 4;
+  --oy: 14px;
+  --ox: 2px;
+  --z: 1;
   --reveal-delay: 480ms;
 }
 
 .story-collage-tile-transit {
   grid-column: 4;
   grid-row: 4;
+  --oy: -18px;
+  --ox: -4px;
+  --z: 4;
   --reveal-delay: 560ms;
 }
 
@@ -2114,8 +2133,19 @@ main > .section + .section {
 
   .story-collage-grid {
     grid-auto-rows: 110px;
-    gap: 12px;
+    gap: 14px 10px;
   }
+
+  /* Halve the per-tile offsets at the narrower 1-column-copy layout so
+     tiles don't push so far off alignment that they overlap awkwardly. */
+  .story-collage-tile-large    { --oy: 0px;   --ox: 0px;  }
+  .story-collage-tile-portrait { --oy: 18px;  --ox: -3px; }
+  .story-collage-tile-family-1 { --oy: -6px;  --ox: 2px;  }
+  .story-collage-tile-docs     { --oy: 12px;  --ox: -2px; }
+  .story-collage-tile-money    { --oy: -4px;  --ox: 3px;  }
+  .story-collage-tile-family-2 { --oy: 16px;  --ox: -4px; }
+  .story-collage-tile-life     { --oy: 8px;   --ox: 1px;  }
+  .story-collage-tile-transit  { --oy: -10px; --ox: -2px; }
 
   .site-nav {
     justify-content: start;
@@ -2277,6 +2307,8 @@ main > .section + .section {
   .story-collage-tile-transit {
     grid-column: auto;
     grid-row: auto;
+    --oy: 0px;
+    --ox: 0px;
   }
 
   .story-collage-tile-large,
