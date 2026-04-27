@@ -609,9 +609,8 @@ textarea {
   z-index: 1;
   justify-self: end;
   align-self: center;
-  /* Scaled up 10% from the original 260/26vw/390 clamp so the mark sits
-     with more presence next to the headline. */
-  width: clamp(286px, 28.6vw, 429px);
+  /* Scaled up so the mark carries more visual weight next to the headline. */
+  width: clamp(343px, 34.3vw, 515px);
   /* Nudge the whole mark so its optical centre lines up with the
      headline block — the tall diagonal silhouette reads centred about
      60% down, so this clamped offset rebalances it against the
@@ -696,11 +695,15 @@ textarea {
    this parent, the shadow traces the masked silhouette (the chevron
    polygon) and spills outside it correctly. */
 .hero-mark .hcg-chev-slot {
+  --hero-chev-shadow:
+    drop-shadow(0 1px 1.5px rgba(14, 28, 42, 0.18))
+    drop-shadow(0 6px 14px rgba(14, 28, 42, 0.16))
+    drop-shadow(0 18px 32px rgba(14, 28, 42, 0.12));
   position: absolute;
   inset: 0;
   opacity: 1;
   pointer-events: none;
-  will-change: transform;
+  will-change: transform, opacity, filter;
   /* Layered realistic elevation shadow.
        1) Tight 1px/1.5px contact shadow — anchors each bar to the
           surface, prevents the "floating cutout" look.
@@ -711,9 +714,7 @@ textarea {
      warm against the off-white page (a neutral-grey shadow reads
      synthetic here). */
   filter:
-    drop-shadow(0 1px 1.5px rgba(14, 28, 42, 0.18))
-    drop-shadow(0 6px 14px rgba(14, 28, 42, 0.16))
-    drop-shadow(0 18px 32px rgba(14, 28, 42, 0.12));
+    var(--hero-chev-shadow);
 }
 
 .hero-mark .hcg-liquid-gl {
@@ -746,7 +747,7 @@ textarea {
 .hero-chevron .hcg-bar {
   transform-box: fill-box;
   transform-origin: 0% 100%;
-  will-change: transform, opacity;
+  will-change: transform, opacity, filter;
 }
 
 /* Grain layer sits on top of everything so the speckle texture modulates
@@ -798,6 +799,10 @@ textarea {
   opacity: 0;
 }
 
+.js .hero-mark .hcg-chev-slot {
+  filter: blur(14px) var(--hero-chev-shadow);
+}
+
 .js .hero-mark.is-revealed .hcg-liquid-dark,
 .js .hero-mark.is-revealed .hcg-liquid-light {
   animation: hero-chev-field-in 1600ms cubic-bezier(0.22, 1, 0.36, 1) 820ms forwards;
@@ -831,35 +836,36 @@ textarea {
 .js .hero-mark .hcg-bar {
   opacity: 0;
   transform: translate(-6%, 12%) scale(0.92);
+  filter: blur(14px);
 }
 
-/* ----- Spectacular staged entrance -----
-   easeOutQuint (cubic-bezier(0.22, 1, 0.36, 1)) is the standard
-   entrance curve used in Material/emphasized motion. */
+/* Bars enter bottom-to-top and use the same blurred load language as the
+   rest of the hero, while JS owns the ongoing cursor-position transforms. */
 .js .hero-mark.is-revealed .hcg-bar-3 {
-  animation: hero-chev-enter 950ms cubic-bezier(0.22, 1, 0.36, 1) 280ms forwards;
+  animation: hero-chev-enter 1500ms var(--hero-load-ease) 420ms forwards;
 }
 .js .hero-mark.is-revealed .hcg-bar-2 {
-  animation: hero-chev-enter 950ms cubic-bezier(0.22, 1, 0.36, 1) 420ms forwards;
+  animation: hero-chev-enter 1500ms var(--hero-load-ease) 560ms forwards;
 }
 .js .hero-mark.is-revealed .hcg-bar-1 {
-  animation: hero-chev-enter 950ms cubic-bezier(0.22, 1, 0.36, 1) 560ms forwards;
+  animation: hero-chev-enter 1500ms var(--hero-load-ease) 700ms forwards;
 }
 
 .js .hero-mark.is-revealed .hcg-chev-slot[data-gl-chev="3"] {
-  animation: hero-chev-slot-in 950ms cubic-bezier(0.22, 1, 0.36, 1) 280ms forwards;
+  animation: hero-chev-slot-in 1500ms var(--hero-load-ease) 420ms forwards;
 }
 .js .hero-mark.is-revealed .hcg-chev-slot[data-gl-chev="2"] {
-  animation: hero-chev-slot-in 950ms cubic-bezier(0.22, 1, 0.36, 1) 420ms forwards;
+  animation: hero-chev-slot-in 1500ms var(--hero-load-ease) 560ms forwards;
 }
 .js .hero-mark.is-revealed .hcg-chev-slot[data-gl-chev="1"] {
-  animation: hero-chev-slot-in 950ms cubic-bezier(0.22, 1, 0.36, 1) 560ms forwards;
+  animation: hero-chev-slot-in 1500ms var(--hero-load-ease) 700ms forwards;
 }
 
 @keyframes hero-chev-enter {
   0% {
     opacity: 0;
     transform: translate(-6%, 12%) scale(0.92);
+    filter: blur(14px);
   }
   55% {
     opacity: 1;
@@ -867,26 +873,22 @@ textarea {
   100% {
     opacity: 1;
     transform: translate(0, 0) scale(1);
+    filter: blur(0);
   }
 }
 
 @keyframes hero-chev-slot-in {
-  from { opacity: 0; }
-  to   { opacity: 1; }
-}
-
-/* After the bars settle, float the whole mark on its own track so the
-   ambient breathing doesn't fight the per-bar transforms above. Animation
-   lives on .hero-mark (not .hero-chevron) so the SVG AND the sibling
-   WebGL canvas drift together — otherwise the canvas would stay pinned
-   while the SVG bars float, exposing misaligned edges. */
-.js .hero-mark.is-revealed {
-  animation: hero-chev-float 8.5s ease-in-out 1700ms infinite alternate;
-}
-
-@keyframes hero-chev-float {
-  from { transform: translate3d(0, -4px, 0); }
-  to   { transform: translate3d(0,  4px, 0); }
+  0% {
+    opacity: 0;
+    filter: blur(14px) var(--hero-chev-shadow);
+  }
+  55% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0) var(--hero-chev-shadow);
+  }
 }
 
 .hero-copy,
@@ -2607,7 +2609,7 @@ main > .section + .section {
 
   .hero-mark {
     justify-self: center;
-    width: clamp(234px, 44vw, 312px);
+    width: clamp(281px, 52.8vw, 374px);
     margin-top: 8px;
   }
 
@@ -3006,10 +3008,12 @@ main > .section + .section {
   .js .hero-mark .hcg-bar {
     opacity: 1;
     transform: none;
+    filter: none;
   }
 
   .js .hero-mark .hcg-chev-slot {
     opacity: 1;
+    filter: var(--hero-chev-shadow);
   }
 
   .js .hero-mark .hcg-liquid-dark,

@@ -552,7 +552,10 @@ if (wordTrack && wordRotator) {
       return;
     }
 
-    const fallback = window.setTimeout(revealAfterPositionReady, 180);
+    // Give the liquid/parallax setup enough time to prime on slower paints.
+    // If it still cannot report position readiness, reveal rather than
+    // leaving the mark hidden.
+    const fallback = window.setTimeout(revealAfterPositionReady, 900);
     mark.addEventListener(
       "hero-chevron-position-ready",
       () => {
@@ -673,16 +676,16 @@ if (wordTrack && wordRotator) {
   };
   window.addEventListener("mousemove", onMove, { passive: true });
 
-  const LERP = 0.065;    // position ease per frame
-  const M_LERP = 0.05;   // cursor ease — slower than position so the field
+  const LERP = 0.045;    // position ease per frame
+  const M_LERP = 0.035;  // cursor ease — slower than position so the field
                          // trails the cursor slightly (feels responsive but
                          // not jittery).
 
   // Per-bar parallax — each of the three chevrons drifts with its own
   // coupling to the cursor, so they don't translate as one rigid block.
   // Units are viewBox units (the SVG is 18.09 × 29.727) — at max cursor
-  // deflection a bar shifts up to ~0.6 vb-units, which at the rendered
-  // size (~390px wide) lands around 12–13px of travel. Subtle but clearly
+  // deflection a bar shifts up to ~0.25 vb-units, which at the rendered
+  // size (~390px wide) lands around 5–6px of travel. Subtle but clearly
   // visible when the cursor swings across the viewport.
   // Each parallax entry owns both the bar's visible fill wrapper
   // (.hcg-parallax[data-parallax=N]) AND the matching polygon inside the
@@ -691,12 +694,12 @@ if (wordTrack && wordRotator) {
   // leaving behind a static silhouette — otherwise a parallaxed bar exposes
   // a "ghost edge" where the clip used to be. Couplings are in viewBox
   // units per unit of normalised cursor travel; kept deliberately subtle
-  // (~0.3 vb ≈ 6px at render size) so the parallax reads as "alive" rather
+  // (~0.18 vb ≈ 4px at render size) so the parallax reads as "alive" rather
   // than "sliding around".
   const parallaxDefs = [
-    { barSel: ".hcg-parallax[data-parallax='1']", clipSel: "polygon[data-parallax-clip='1']", cursorX:  0.33, cursorY:  0.24 },
-    { barSel: ".hcg-parallax[data-parallax='2']", clipSel: "polygon[data-parallax-clip='2']", cursorX: -0.27, cursorY:  0.39 },
-    { barSel: ".hcg-parallax[data-parallax='3']", clipSel: "polygon[data-parallax-clip='3']", cursorX:  0.42, cursorY: -0.30 },
+    { barSel: ".hcg-parallax[data-parallax='1']", clipSel: "polygon[data-parallax-clip='1']", cursorX:  0.20, cursorY:  0.14 },
+    { barSel: ".hcg-parallax[data-parallax='2']", clipSel: "polygon[data-parallax-clip='2']", cursorX: -0.16, cursorY:  0.23 },
+    { barSel: ".hcg-parallax[data-parallax='3']", clipSel: "polygon[data-parallax-clip='3']", cursorX:  0.25, cursorY: -0.18 },
   ];
   const parallaxNodes = [];
   for (const pd of parallaxDefs) {
@@ -895,7 +898,7 @@ if (wordTrack && wordRotator) {
   //   * Two domain-warp passes — the second pass feeds the first back
   //     in with different phases and a partially negated time term so
   //     the field genuinely swirls instead of just translating. With
-  //     the speed bumped to t*0.03 the swirl is visible without feeling busy.
+  //     the speed bumped to t*0.038 the swirl is visible without feeling busy.
   //   * Per-chevron parallax is applied as a CSS transform on the
   //     slot wrapping the canvas, so the shader itself doesn't need a
   //     u_mouse uniform — the field translates in lockstep with the
@@ -949,8 +952,8 @@ if (wordTrack && wordRotator) {
       vec2 uv = gl_FragCoord.xy / u_resolution;
       uv.x *= u_resolution.x / u_resolution.y;
 
-      vec2  p = uv * 0.35;        // feature scale
-      float t = u_time * 0.03;    // gentle flow, 2x faster idle colour movement
+      vec2  p = uv * 0.44;        // 20% tighter feature scale for denser detail
+      float t = u_time * 0.038;   // slightly quicker idle colour movement
 
       // Two-pass domain warp. q deforms the input into organic blobs;
       // r feeds q back into another fbm sample with different phases /
