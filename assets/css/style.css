@@ -599,7 +599,7 @@ textarea {
   z-index: 1;
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
-  gap: clamp(32px, 6vw, 88px);
+  gap: clamp(28px, 4vw, 64px);
   align-items: center;
 }
 
@@ -904,7 +904,7 @@ textarea {
 }
 
 .hero-copy {
-  max-width: 760px;
+  max-width: 860px;
 }
 
 .hero-copy > .eyebrow {
@@ -975,8 +975,8 @@ textarea {
 }
 
 .hero h1 {
-  max-width: 15ch;
-  font-size: clamp(3.5rem, 7vw, 6.6rem);
+  max-width: 18ch;
+  font-size: clamp(3.5rem, 6.45vw, 6.6rem);
 }
 
 .hero-headline-strong,
@@ -987,6 +987,7 @@ textarea {
 .hero-headline-strong {
   font-size: 0.88em;
   font-weight: 700;
+  white-space: nowrap;
 }
 
 .hero-headline-italic {
@@ -1042,7 +1043,8 @@ textarea {
 
 .word-rotator-track span {
   display: block;
-  min-height: var(--roller-word-height, 1.12em);
+  height: var(--roller-word-height, 1.12em);
+  line-height: var(--roller-word-height, 1.12em);
   white-space: nowrap;
 }
 
@@ -1279,8 +1281,11 @@ textarea {
 }
 
 /* Keep one consistent vertical gap between stacked homepage sections instead
-   of compounding top and bottom padding on every adjacent section pair. */
-main > .section + .section {
+   of compounding top and bottom padding on every adjacent section pair.
+   The post-marquee sections live inside `.content-rail-host` (the wrapper
+   that hosts the chevron rail), so the rule now targets that parent. */
+main > .section + .section,
+.content-rail-host > .section + .section {
   padding-top: 0;
 }
 
@@ -1438,6 +1443,89 @@ main > .section + .section {
   stroke-linecap: round;
   stroke-linejoin: round;
   fill: none;
+}
+
+/* Chevron rail — a continuously scrolling column of brand-green chevron
+   outlines that runs down the right gutter of the page, behind every
+   content section between the values marquee and the footer.
+
+   Implementation: the rail is a single absolutely-positioned div inside
+   `.content-rail-host`, which wraps the post-marquee / pre-footer
+   sections. The host has `isolation: isolate` so the rail's z-index:-1
+   stays scoped to it (and never escapes behind page-level backgrounds);
+   the host's overflow: hidden also keeps the rail from leaking up into
+   the marquee or down into the footer if either ever changes height.
+
+   The chevron polygon is the same shape as bar 1 of the hero chevron
+   mark (points='0 11.76 0 16.15 17.96 4.39 17.96 0'), embedded as an
+   inline SVG data-URL. `repeat-y` tiles it down the rail's height; a
+   linear keyframe animation translates `background-position-y` by
+   exactly one tile height per cycle so the loop is seamless. Tile
+   height is computed from the rail's current width via a custom
+   property, which keeps the loop correct when the width changes at
+   media-query breakpoints. */
+.content-rail-host {
+  position: relative;
+  isolation: isolate;
+  /* Horizontal-only clip: the rail is wider than the gutter on most
+     desktops so we still need to prevent horizontal scrollbars, but
+     we deliberately leave overflow-y as visible so the rail can extend
+     below the wrapper's bottom edge into the footer's margin-top gap.
+     (The rail bottoms out at -68px, exactly where the navy footer
+     begins — see `.site-footer { margin-top: 68px }`.) */
+  overflow-x: clip;
+}
+
+.chevron-rail {
+  --rail-width: clamp(450px, 54vw, 840px);
+  /* Tile height tracks the SVG viewBox aspect (18.5 / 18.96). The
+     viewBox is now barely taller than the chevron bar itself, so the
+     gap between consecutive bars is ~2 vb units — chevrons read as a
+     tight cascading column rather than widely-spaced marks. */
+  --rail-tile-h: calc(var(--rail-width) * 18.5 / 18.96);
+  position: absolute;
+  /* The rail starts right after the values marquee (top of wrapper)
+     and extends 68px past the wrapper's bottom edge so it lands on
+     the navy footer's actual top edge. The 68px matches the footer's
+     `margin-top` — that margin creates a tan gap between the wrapper
+     and the footer that we want the chevrons to flow through. */
+  top: 0;
+  bottom: -68px;
+  /* Centre the rail on the container's right edge: gutter offset is
+     `(100vw - 1180px) / 2` (clamped to 24px so it never goes negative
+     at narrow viewports), then we shift left by half the rail width
+     so the rail's centre lands on the container edge. Result: about
+     half the rail sits behind content, the other half in the gutter. */
+  right: calc(max(24px, (100vw - 1180px) / 2) - var(--rail-width) / 2);
+  width: var(--rail-width);
+  pointer-events: none;
+  z-index: -1;
+  /* Reduce overall visual weight so the rail reads as quiet background
+     texture, more in line with the dot field's average alpha. */
+  opacity: 0.75;
+  /* Stroke colour `#6e7882` matches the INK constant used by the hero
+     dot canvas (rgb 110,120,130 — the trough/baseline slate that the
+     dots sit at most of the time). Stroke-width 0.0315 in viewBox
+     units (30% thinner than 0.045) lands at ~0.75–1.4px on screen. */
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-0.5 -0.5 18.96 18.5'><polygon points='0,11.76 0,16.15 17.96,4.39 17.96,0' fill='none' stroke='%236e7882' stroke-width='0.0315'/></svg>");
+  background-repeat: repeat-y;
+  background-size: 100% var(--rail-tile-h);
+  animation: chevron-rail-scroll 24s linear infinite;
+}
+
+/* Animate background-position upward (negative Y) so chevrons appear to
+   scroll up the page. One tile of travel per cycle keeps the loop
+   seamless because the next tile starts exactly where the previous
+   one ended. */
+@keyframes chevron-rail-scroll {
+  from { background-position: 0 0; }
+  to   { background-position: 0 calc(-1 * var(--rail-tile-h)); }
+}
+
+@media (max-width: 780px) {
+  .chevron-rail {
+    display: none;
+  }
 }
 
 .section-story {
@@ -2678,6 +2766,10 @@ main > .section + .section {
 
   .hero h1 {
     max-width: 14ch;
+  }
+
+  .hero-headline-strong {
+    white-space: normal;
   }
 
   .steps-grid,

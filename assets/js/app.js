@@ -125,6 +125,12 @@ if (wordTrack && wordRotator) {
   let wordHeight = 0;
   let rotationTimer = null;
 
+  const setTrackPosition = () => {
+    const activeWord = words[activeIndex];
+    const y = activeWord ? activeWord.offsetTop : activeIndex * wordHeight;
+    wordTrack.style.transform = `translate3d(0, -${y}px, 0)`;
+  };
+
   const setWordMetrics = () => {
     let maxWidth = 0;
     let maxHeight = 0;
@@ -140,12 +146,12 @@ if (wordTrack && wordRotator) {
     wordHeight = Math.ceil(maxHeight);
     wordRotator.style.setProperty("--roller-word-height", `${wordHeight}px`);
     wordRotator.style.setProperty("--roller-word-width", `${Math.ceil(maxWidth)}px`);
-    wordTrack.style.transform = `translateY(-${activeIndex * wordHeight}px)`;
+    setTrackPosition();
   };
 
   const rotateWords = () => {
     activeIndex = (activeIndex + 1) % words.length;
-    wordTrack.style.transform = `translateY(-${activeIndex * wordHeight}px)`;
+    setTrackPosition();
   };
 
   setWordMetrics();
