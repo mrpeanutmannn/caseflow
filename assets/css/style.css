@@ -912,7 +912,13 @@ textarea {
 }
 
 .hero-copy h1 {
-  animation: hero-load-right-strong 1800ms var(--hero-load-ease) 560ms both;
+  animation: none;
+}
+
+.js .hero-copy h1[data-animate] {
+  opacity: 1;
+  transform: none;
+  transition: none;
 }
 
 /* Soft radial halo behind the hero copy so the headline and paragraph rest
