@@ -7,6 +7,14 @@ const intakeForm = document.getElementById("intake-form");
 const formNote = document.getElementById("form-note");
 const wordTrack = document.querySelector(".word-rotator-track");
 const wordRotator = document.querySelector(".word-rotator");
+const isSafari =
+  /^((?!chrome|chromium|crios|fxios|edg|opr|android).)*safari/i.test(
+    navigator.userAgent
+  ) && /apple/i.test(navigator.vendor || "");
+
+if (isSafari) {
+  document.documentElement.classList.add("is-safari");
+}
 
 if (yearNode) {
   yearNode.textContent = new Date().getFullYear();
@@ -57,8 +65,143 @@ if (menuToggle && siteNav && headerActions) {
 }
 
 if (intakeForm && formNote) {
+  const pages = Array.from(intakeForm.querySelectorAll("[data-form-page]"));
+  const track = intakeForm.querySelector(".intake-form-track");
+  const currentStepNode = intakeForm.querySelector("[data-form-step-current]");
+  const conditionalToggles = Array.from(
+    intakeForm.querySelectorAll("[data-conditional-toggle]")
+  );
+  let activePage = 0;
+
+  const normalizeFormValue = (value) =>
+    String(value || "")
+      .replace(/[\u0000-\u001F\u007F]/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
+
+  const getActiveControls = () =>
+    Array.from(
+      pages[activePage]?.querySelectorAll("input, select, textarea") || []
+    ).filter((control) => !control.disabled);
+
+  const validateActivePage = () => {
+    const invalidControl = getActiveControls().find(
+      (control) => !control.checkValidity()
+    );
+
+    if (!invalidControl) return true;
+
+    invalidControl.reportValidity();
+    return false;
+  };
+
+  const collectSafeFormData = () => {
+    const formData = new FormData(intakeForm);
+    const payload = {};
+
+    formData.forEach((value, key) => {
+      payload[key] = normalizeFormValue(value);
+    });
+
+    return payload;
+  };
+
+  const setControlTabState = (page, isActive) => {
+    page.querySelectorAll("input, select, textarea, button").forEach((control) => {
+      if (!isActive) {
+        if (!control.hasAttribute("data-original-tabindex")) {
+          control.dataset.originalTabindex = control.getAttribute("tabindex") || "";
+        }
+        control.setAttribute("tabindex", "-1");
+        return;
+      }
+
+      if (control.hasAttribute("data-original-tabindex")) {
+        const originalTabindex = control.dataset.originalTabindex;
+        if (originalTabindex) {
+          control.setAttribute("tabindex", originalTabindex);
+        } else {
+          control.removeAttribute("tabindex");
+        }
+        delete control.dataset.originalTabindex;
+      } else {
+        control.removeAttribute("tabindex");
+      }
+    });
+  };
+
+  const syncFormPage = (nextPage, shouldFocus = true) => {
+    activePage = Math.max(0, Math.min(nextPage, pages.length - 1));
+    intakeForm.dataset.activePage = String(activePage);
+    intakeForm.style.setProperty("--active-page", activePage);
+
+    pages.forEach((page, index) => {
+      const isActive = index === activePage;
+      page.classList.toggle("is-active", isActive);
+      page.setAttribute("aria-hidden", String(!isActive));
+      page.inert = !isActive;
+      setControlTabState(page, isActive);
+    });
+
+    if (currentStepNode) {
+      currentStepNode.textContent = String(activePage + 1);
+    }
+
+    formNote.textContent =
+      activePage === 0
+        ? "Start with the basics. The next step asks about attorney and funding details if you have them."
+        : "Add attorney and funding details if they apply, then submit the preview application.";
+
+    if (!shouldFocus) return;
+
+    window.setTimeout(() => {
+      const focusTarget = pages[activePage]?.querySelector(
+        "input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button"
+      );
+      focusTarget?.focus();
+    }, 240);
+  };
+
+  const syncConditionalField = (toggle) => {
+    const targetName = toggle.dataset.conditionalToggle;
+    const field = intakeForm.querySelector(`[data-conditional-field="${targetName}"]`);
+    if (!field) return;
+
+    const shouldShow = toggle.value === "yes";
+    field.hidden = !shouldShow;
+    field.querySelectorAll("input, select, textarea").forEach((control) => {
+      control.disabled = !shouldShow;
+      if (!shouldShow) control.value = "";
+    });
+  };
+
+  intakeForm.querySelector("[data-form-next]")?.addEventListener("click", () => {
+    if (!validateActivePage()) return;
+    syncFormPage(activePage + 1);
+  });
+
+  intakeForm.querySelector("[data-form-back]")?.addEventListener("click", () => {
+    syncFormPage(activePage - 1);
+  });
+
+  conditionalToggles.forEach((toggle) => {
+    syncConditionalField(toggle);
+    toggle.addEventListener("change", () => syncConditionalField(toggle));
+  });
+
+  syncFormPage(0, false);
+
   intakeForm.addEventListener("submit", (event) => {
     event.preventDefault();
+
+    if (!validateActivePage()) return;
+
+    if (activePage < pages.length - 1) {
+      syncFormPage(activePage + 1);
+      return;
+    }
+
+    intakeForm.safePreviewPayload = collectSafeFormData();
     formNote.textContent =
       "Preview mode: this build does not submit yet, but the finished site can route these details directly to Caseflow.";
   });
@@ -69,9 +212,86 @@ document.querySelectorAll(".faq-item").forEach((item) => {
   const answer = item.querySelector(".faq-answer");
   if (!summary || !answer) return;
 
-  if (!item.open) {
+  const transitionFallbackMs = 560;
+  let animationId = 0;
+  let fallbackTimer = 0;
+  let transitionCleanup = null;
+
+  const setExpanded = (isExpanded) => {
+    summary.setAttribute("aria-expanded", String(isExpanded));
+  };
+
+  const clearPendingTransition = () => {
+    window.clearTimeout(fallbackTimer);
+
+    if (transitionCleanup) {
+      transitionCleanup();
+      transitionCleanup = null;
+    }
+  };
+
+  const afterHeightTransition = (id, callback) => {
+    const complete = () => {
+      if (id !== animationId) return;
+
+      clearPendingTransition();
+      callback();
+    };
+
+    const handleTransitionEnd = (transitionEvent) => {
+      if (transitionEvent.propertyName !== "height") return;
+      complete();
+    };
+
+    answer.addEventListener("transitionend", handleTransitionEnd);
+    transitionCleanup = () => {
+      answer.removeEventListener("transitionend", handleTransitionEnd);
+    };
+    fallbackTimer = window.setTimeout(complete, transitionFallbackMs);
+  };
+
+  const finishOpen = () => {
+    item.classList.remove("is-opening", "is-closing");
+    answer.style.height = "auto";
+    setExpanded(true);
+  };
+
+  const finishClose = () => {
+    item.open = false;
+    item.classList.remove("is-opening", "is-closing");
     answer.style.height = "0px";
-  }
+    setExpanded(false);
+  };
+
+  const openItem = () => {
+    const id = ++animationId;
+
+    clearPendingTransition();
+    item.open = true;
+    item.classList.remove("is-closing");
+    item.classList.add("is-opening");
+    answer.style.height = "0px";
+    setExpanded(true);
+    void answer.offsetHeight;
+    answer.style.height = `${answer.scrollHeight}px`;
+    afterHeightTransition(id, finishOpen);
+  };
+
+  const closeItem = () => {
+    const id = ++animationId;
+
+    clearPendingTransition();
+    item.classList.remove("is-opening");
+    item.classList.add("is-closing");
+    setExpanded(false);
+    answer.style.height = `${answer.scrollHeight}px`;
+    void answer.offsetHeight;
+    answer.style.height = "0px";
+    afterHeightTransition(id, finishClose);
+  };
+
+  setExpanded(item.open);
+  answer.style.height = item.open ? "auto" : "0px";
 
   summary.addEventListener("click", (event) => {
     event.preventDefault();
@@ -81,41 +301,25 @@ document.querySelectorAll(".faq-item").forEach((item) => {
     ).matches;
 
     if (prefersReducedMotion) {
-      item.open = !item.open;
-      answer.style.height = item.open ? "auto" : "0px";
+      clearPendingTransition();
+      animationId++;
+
+      if (item.open) {
+        finishClose();
+      } else {
+        item.open = true;
+        finishOpen();
+      }
+
       return;
     }
 
-    const isOpen = item.open;
-
-    if (isOpen) {
-      item.classList.add("is-closing");
-      answer.style.height = `${answer.scrollHeight}px`;
-      window.requestAnimationFrame(() => {
-        answer.style.height = "0px";
-      });
-      const completeClose = (transitionEvent) => {
-        if (transitionEvent.propertyName !== "height") return;
-        answer.removeEventListener("transitionend", completeClose);
-        item.classList.remove("is-closing");
-        item.open = false;
-      };
-      answer.addEventListener("transitionend", completeClose);
+    if (item.open && !item.classList.contains("is-closing")) {
+      closeItem();
       return;
     }
 
-    item.open = true;
-    item.classList.remove("is-closing");
-    answer.style.height = "0px";
-    window.requestAnimationFrame(() => {
-      answer.style.height = `${answer.scrollHeight}px`;
-    });
-    const completeOpen = (transitionEvent) => {
-      if (transitionEvent.propertyName !== "height") return;
-      answer.removeEventListener("transitionend", completeOpen);
-      answer.style.height = "auto";
-    };
-    answer.addEventListener("transitionend", completeOpen);
+    openItem();
   });
 });
 
@@ -247,6 +451,12 @@ if (wordTrack && wordRotator) {
 (function initHeroDotGrid() {
   const canvas = document.querySelector(".hero-dot-canvas");
   if (!canvas) return;
+
+  if (isSafari) {
+    canvas.remove();
+    return;
+  }
+
   const backdrop = canvas.parentElement;
   const hero = backdrop && backdrop.closest(".hero");
   if (!backdrop || !hero) return;
@@ -602,6 +812,12 @@ if (wordTrack && wordRotator) {
   const svg = mark.querySelector(".hero-chevron");
   if (!svg) return;
 
+  if (isSafari) {
+    mark.classList.add("is-position-ready");
+    mark.dispatchEvent(new CustomEvent("hero-chevron-position-ready"));
+    return;
+  }
+
   // Gradient choreography. Frequencies (freqX/freqY) are relatively prime-ish
   // so the overall motion never locks into a visible cycle. cursorX/cursorY
   // are coupling coefficients in viewBox units — how far the blob shifts per
@@ -871,6 +1087,11 @@ if (wordTrack && wordRotator) {
   if (!mark) return;
   const canvases = Array.from(mark.querySelectorAll(".hcg-liquid-gl"));
   if (!canvases.length) return;
+
+  if (isSafari) {
+    canvases.forEach((canvas) => canvas.remove());
+    return;
+  }
 
   // Respect reduced-motion: still render a single static frame so the mark
   // has its colour story, but skip the rAF loop.

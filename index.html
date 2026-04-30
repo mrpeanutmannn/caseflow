@@ -40,7 +40,7 @@
 
           <div class="header-actions">
             <a class="header-phone" href="tel:8555041900">855-504-1900</a>
-            <a class="button button-primary" href="#intake">Get started</a>
+            <a class="button button-primary" href="#intake">Apply Now</a>
           </div>
         </div>
       </header>
@@ -78,7 +78,7 @@
               </p>
 
               <div class="hero-actions" data-animate="fade-up">
-                <a class="button button-primary" href="#intake">Request a call</a>
+                <a class="button button-primary" href="#intake">Apply Now</a>
                 <a class="button button-secondary" href="#how-it-works">See how it works</a>
               </div>
 
@@ -515,7 +515,6 @@
         <section class="section section-story">
           <div class="container story-grid">
             <div class="story-copy" data-animate="fade-up">
-              <p class="eyebrow eyebrow-mark">What this is</p>
               <h2>We help with expenses while your case is still pending.</h2>
               <p>
                 Pre-settlement funding can help cover everyday expenses while a case is still moving through the legal
@@ -527,7 +526,7 @@
                 decide. You should know what you are getting, what it costs, and how repayment works before you sign anything.
               </p>
               <div class="story-actions">
-                <a class="button button-primary" href="#intake">Request a call</a>
+                <a class="button button-primary" href="#intake">Apply Now</a>
                 <a class="button button-secondary" href="pages/faq/index.html">See common questions</a>
               </div>
             </div>
@@ -605,14 +604,14 @@
                   <div class="process-copy-stack">
                     <div class="process-copy-main">
                       <p class="eyebrow eyebrow-mark">How it works</p>
-                      <h2>A simple process from first call to funding.</h2>
+                      <h2>A simple process forward to funding.</h2>
                       <p>
                         You share the basics, Caseflow reviews the case with your attorney, and if an offer is available,
                         you get a chance to review the terms before deciding whether to move forward.
                       </p>
                     </div>
                     <div class="process-actions">
-                      <a class="button button-primary" href="#intake">Start the form</a>
+                      <a class="button button-primary" href="#intake">Apply Now</a>
                       <a class="button button-secondary" href="tel:8555041900">Call Caseflow</a>
                     </div>
                   </div>
@@ -743,36 +742,96 @@
 
               <h2>Start with a few details.</h2>
 
-              <form class="intake-form" id="intake-form">
-                <label>
-                  Full name
-                  <input type="text" name="name" placeholder="Your name">
-                </label>
-                <label>
-                  Phone number
-                  <input type="tel" name="phone" placeholder="(555) 555-5555">
-                </label>
-                <label>
-                  Email
-                  <input type="email" name="email" placeholder="you@example.com">
-                </label>
-                <label>
-                  What would help most right now?
-                  <select name="priority">
-                    <option value="">Select one</option>
-                    <option>Understanding my options</option>
-                    <option>Speaking with someone quickly</option>
-                    <option>General information about the process</option>
-                    <option>Support for a current application</option>
-                  </select>
-                </label>
-                <label>
-                  Short note
-                  <textarea name="message" rows="4" placeholder="Share a little about your situation."></textarea>
-                </label>
-                <button class="button button-primary button-block" type="submit">Review next steps</button>
+              <form class="intake-form intake-form-paginated" id="intake-form" data-active-page="0">
+                <div class="intake-form-status" aria-live="polite">
+                  <span>Step <strong data-form-step-current>1</strong> of 2</span>
+                </div>
+                <div class="intake-form-window">
+                  <div class="intake-form-track">
+                    <div class="intake-form-page is-active" data-form-page="0">
+                      <div class="form-field-grid">
+                        <label class="form-field">
+                          First name
+                          <input type="text" name="first_name" placeholder="First name" autocomplete="given-name" autocapitalize="words" maxlength="80" required>
+                        </label>
+                        <label class="form-field">
+                          Last name
+                          <input type="text" name="last_name" placeholder="Last name" autocomplete="family-name" autocapitalize="words" maxlength="80" required>
+                        </label>
+                        <label class="form-field form-field-full">
+                          Email
+                          <input type="email" name="email" placeholder="you@example.com" autocomplete="email" maxlength="120" required>
+                        </label>
+                        <label class="form-field">
+                          Phone number
+                          <input type="tel" name="phone" placeholder="(555) 555-5555" autocomplete="tel" inputmode="tel" pattern="[0-9()+ .-]{7,24}" maxlength="24" required>
+                        </label>
+                        <label class="form-field">
+                          Date of accident
+                          <input type="date" name="accident_date" required>
+                        </label>
+                        <label class="form-field">
+                          Incident state
+                          <input type="text" name="incident_state" placeholder="State" autocomplete="address-level1" autocapitalize="words" maxlength="40" required>
+                        </label>
+                        <label class="form-field">
+                          Requested amount
+                          <input type="text" name="requested_amount" placeholder="$" inputmode="decimal" pattern="[$0-9, .]{1,32}" maxlength="32" required>
+                        </label>
+                        <label class="form-field form-field-full">
+                          Type of case
+                          <input type="text" name="case_type" placeholder="Case type" autocapitalize="words" maxlength="120" required>
+                        </label>
+                      </div>
+                      <div class="form-page-actions">
+                        <button class="button button-primary button-block" type="button" data-form-next>Next</button>
+                      </div>
+                    </div>
+
+                    <div class="intake-form-page" data-form-page="1" aria-hidden="true">
+                      <div class="form-field-grid">
+                        <label class="form-field form-field-full">
+                          Are you currently working with an attorney?
+                          <select name="has_attorney" data-conditional-toggle="attorney_name" required>
+                            <option value="">Select one</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                          </select>
+                        </label>
+                        <label class="form-field form-field-full conditional-field" data-conditional-field="attorney_name" hidden>
+                          Attorney's name
+                          <input type="text" name="attorney_name" placeholder="Attorney or firm name" autocapitalize="words" maxlength="120" disabled>
+                        </label>
+                        <label class="form-field">
+                          Has your case settled?
+                          <select name="case_settled" required>
+                            <option value="">Select one</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                          </select>
+                        </label>
+                        <label class="form-field form-field-full">
+                          Have you received prior funding for this case?
+                          <select name="prior_funding" data-conditional-toggle="prior_funding_provider" required>
+                            <option value="">Select one</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                          </select>
+                        </label>
+                        <label class="form-field form-field-full conditional-field" data-conditional-field="prior_funding_provider" hidden>
+                          What capital provider did you use?
+                          <input type="text" name="prior_funding_provider" placeholder="Provider name" autocapitalize="words" maxlength="120" disabled>
+                        </label>
+                      </div>
+                      <div class="form-page-actions">
+                        <button class="button button-secondary" type="button" data-form-back>Back</button>
+                        <button class="button button-primary" type="submit">Apply Now</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
                 <p class="form-note" id="form-note" aria-live="polite">
-                  A short review usually starts with your basic contact information and the attorney handling your case.
+                  Start with the basics. The next step asks about attorney and funding details if you have them.
                 </p>
               </form>
             </div>
@@ -782,7 +841,6 @@
         <section class="section section-split">
           <div class="container">
             <div class="split-panel split-panel-dark split-panel-focus" data-animate="fade-up">
-              <p class="eyebrow eyebrow-mark">What matters before you say yes</p>
               <h2>Before you agree to anything, the basics should be easy to understand.</h2>
               <ul class="feature-list">
                 <li>How pre-settlement funding is different from a traditional loan</li>
@@ -806,7 +864,6 @@
         <section class="section section-cta">
           <div class="container cta-card frame-accent" data-animate="fade-up">
             <div>
-              <p class="eyebrow eyebrow-mark">Talk with Caseflow</p>
               <h2>Want to talk it through?</h2>
               <p>
                 Call Caseflow or send over a few details. The point is to help you understand your options before you
@@ -814,7 +871,7 @@
               </p>
             </div>
             <div class="cta-actions">
-              <a class="button button-primary" href="#intake">Start the form</a>
+              <a class="button button-primary" href="#intake">Apply Now</a>
               <a class="button button-secondary" href="tel:8555041900">Call 855-504-1900</a>
             </div>
           </div>
