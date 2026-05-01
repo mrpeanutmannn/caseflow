@@ -1165,7 +1165,7 @@ textarea {
 }
 
 .hero-panel {
-  padding: 28px;
+  padding: 32px 28px;
   border-radius: var(--cut-radius-lg);
   background: #fff;
   box-shadow: none;
@@ -1294,7 +1294,7 @@ textarea {
   flex: 0 0 100%;
   display: grid;
   grid-template-rows: minmax(0, 1fr) auto;
-  gap: 14px;
+  gap: 16px;
 }
 
 .form-field-grid {

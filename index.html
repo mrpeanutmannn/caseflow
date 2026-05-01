@@ -771,8 +771,10 @@
                           <input type="date" name="accident_date" required>
                         </label>
                         <label class="form-field">
-                          Incident state
-                          <input type="text" name="incident_state" placeholder="State" autocomplete="address-level1" autocapitalize="words" maxlength="40" required>
+                          State
+                          <select name="state" autocomplete="address-level1" data-state-picker required>
+                            <option value="">Select state</option>
+                          </select>
                         </label>
                         <label class="form-field">
                           Requested amount
@@ -791,6 +793,12 @@
                     <div class="intake-form-page" data-form-page="1" aria-hidden="true">
                       <div class="form-field-grid">
                         <label class="form-field form-field-full">
+                          Incident State
+                          <select name="incident_state" data-state-picker required>
+                            <option value="">Select incident state</option>
+                          </select>
+                        </label>
+                        <label class="form-field form-field-full">
                           Are you currently working with an attorney?
                           <select name="has_attorney" data-conditional-toggle="attorney_name" required>
                             <option value="">Select one</option>
@@ -802,7 +810,7 @@
                           Attorney's name
                           <input type="text" name="attorney_name" placeholder="Attorney or firm name" autocapitalize="words" maxlength="120" disabled>
                         </label>
-                        <label class="form-field">
+                        <label class="form-field form-field-full">
                           Has your case settled?
                           <select name="case_settled" required>
                             <option value="">Select one</option>
