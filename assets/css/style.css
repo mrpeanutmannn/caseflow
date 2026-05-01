@@ -2398,6 +2398,46 @@ main > .section + .section,
   color: rgba(255, 255, 255, 0.84);
 }
 
+.section-home-faq {
+  scroll-margin-top: 96px;
+}
+
+.home-faq-panel {
+  display: grid;
+  gap: clamp(24px, 4vw, 44px);
+  padding: clamp(28px, 5vw, 54px);
+}
+
+.home-faq-heading {
+  max-width: 760px;
+}
+
+.home-faq-heading h2 {
+  max-width: 13ch;
+  color: #fff;
+}
+
+.home-faq-heading p:not(.eyebrow) {
+  max-width: 58ch;
+  margin: 18px 0 0;
+  color: rgba(255, 255, 255, 0.76);
+}
+
+.home-faq-panel .faq-accordion {
+  margin-top: 0;
+}
+
+.faq-accordion-on-dark .faq-item {
+  border-color: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.97);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.08);
+}
+
+.faq-accordion-on-dark .faq-item:not(.is-closing)[open] {
+  border-color: rgba(0, 147, 82, 0.32);
+  box-shadow: 0 20px 46px rgba(0, 0, 0, 0.14);
+}
+
 .split-panel-actions {
   grid-column: 1;
   grid-row: 5;
@@ -3028,15 +3068,27 @@ main > .section + .section,
     padding: clamp(32px, 6svh, 56px) 0;
   }
 
+  .hero-grid {
+    justify-items: center;
+  }
+
   .hero-panel,
   .process-shell,
   .split-panel,
-  .step-card,
   .faq-card,
   .page-shell,
   .page-card,
   .cta-card {
     padding: 24px;
+  }
+
+  main picture,
+  .story-collage,
+  .process-side,
+  .intake-collage,
+  .split-photo-chip,
+  .band-mark {
+    display: none;
   }
 
   .faq-item summary {
@@ -3069,14 +3121,58 @@ main > .section + .section,
 
   .hero h1 {
     max-width: 100%;
+    font-size: clamp(3.2rem, 16.2vw, 4.8rem);
+    line-height: 0.86;
+    text-align: center;
   }
 
   .hero-headline-strong {
-    font-size: 0.84em;
+    font-size: 0.82em;
+    white-space: nowrap;
+  }
+
+  .hero-headline-italic {
+    font-size: 1.12em;
+  }
+
+  .section h2,
+  .split-panel h2,
+  .cta-card h2,
+  .page-shell h1,
+  .page-cta-panel h2 {
+    font-size: clamp(2.45rem, 11.6vw, 4.15rem);
+    line-height: 0.95;
+  }
+
+  .hero-panel h2 {
+    font-size: clamp(2.05rem, 9.5vw, 3.1rem);
+  }
+
+  .step-card h3,
+  .faq-card h3,
+  .page-card h3 {
+    font-size: clamp(1.28rem, 6vw, 1.72rem);
+  }
+
+  .story-copy h2 {
+    max-width: 10.5ch;
   }
 
   .hero-copy {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     max-width: 100%;
+    text-align: center;
+  }
+
+  .hero-copy > .eyebrow {
+    display: none;
+  }
+
+  .hero-lede {
+    max-width: 32ch;
+    margin-inline: auto;
   }
 
   .hero-actions,
@@ -3099,8 +3195,56 @@ main > .section + .section,
     width: 100%;
   }
 
+  .story-actions,
+  .process-actions {
+    margin-top: 24px;
+  }
+
+  .step-card-inner {
+    padding: 16px;
+  }
+
+  .hero-actions {
+    justify-content: center;
+  }
+
+  .hero-actions .button {
+    width: auto;
+    min-width: min(240px, 72vw);
+    padding-inline: 34px;
+  }
+
+  .hero-actions .button-secondary {
+    display: none;
+  }
+
   .hero-mark {
     display: none;
+  }
+
+  .band-card {
+    grid-template-columns: 1fr;
+    gap: 0;
+    padding: 30px clamp(26px, 8vw, 34px);
+  }
+
+  .band-mark {
+    display: none;
+  }
+
+  .band-copy .eyebrow {
+    gap: 9px;
+    width: 100%;
+    max-width: 100%;
+    font-size: clamp(0.68rem, 3.2vw, 0.82rem);
+    letter-spacing: 0.16em;
+    white-space: nowrap;
+  }
+
+  .band-copy .eyebrow::before {
+    width: 12px;
+    height: 16px;
+    flex-basis: 12px;
   }
 
   .process-intro {
@@ -3136,7 +3280,33 @@ main > .section + .section,
   }
 
   .hero-rotator-line {
-    flex-wrap: wrap;
+    order: -1;
+    display: inline-grid;
+    grid-template-columns: max-content minmax(var(--roller-word-width, 0px), max-content);
+    align-items: center;
+    column-gap: clamp(8px, 2.4vw, 12px);
+    font-size: clamp(0.78rem, 3.6vw, 1rem);
+    line-height: 1.15;
+    margin: 0 0 clamp(10px, calc(8vw - 18px), 22px);
+    white-space: nowrap;
+  }
+
+  .hero-rotator-line .word-rotator {
+    flex: 0 0 auto;
+    min-width: var(--roller-word-width, auto);
+    text-align: left;
+  }
+
+  .hero-copy h1 {
+    order: 0;
+  }
+
+  .hero-lede {
+    order: 1;
+  }
+
+  .hero-actions {
+    order: 2;
   }
 
   .story-grid {
