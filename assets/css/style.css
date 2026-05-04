@@ -3142,7 +3142,7 @@ main > .section + .section,
   .hero h1 {
     max-width: 100%;
     font-size: clamp(3.2rem, 16.2vw, 4.8rem);
-    line-height: 0.86;
+    line-height: 0.91;
     text-align: center;
   }
 
@@ -3307,7 +3307,7 @@ main > .section + .section,
     column-gap: clamp(8px, 2.4vw, 12px);
     font-size: clamp(0.78rem, 3.6vw, 1rem);
     line-height: 1.15;
-    margin: 0 0 clamp(10px, calc(8vw - 18px), 22px) clamp(8px, 2.5vw, 14px);
+    margin: 0 0 clamp(16px, calc(8vw - 10px), 28px) clamp(8px, 2.5vw, 14px);
     white-space: nowrap;
   }
 
