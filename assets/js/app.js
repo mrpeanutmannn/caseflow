@@ -16,8 +16,6 @@ const mobilePerfQuery =
   window.matchMedia &&
   window.matchMedia("(max-width: 780px), (pointer: coarse)");
 const isMobileViewport = !mobilePerfQuery || mobilePerfQuery.matches;
-const shouldReduceMobileEffects =
-  isFirefox && isMobileViewport;
 const shouldDisableMobileChevronGL = isMobileViewport;
 
 if (isSafari) {
@@ -26,10 +24,6 @@ if (isSafari) {
 
 if (isFirefox) {
   document.documentElement.classList.add("is-firefox");
-}
-
-if (shouldReduceMobileEffects) {
-  document.documentElement.classList.add("is-mobile-firefox");
 }
 
 if (shouldDisableMobileChevronGL) {
@@ -567,7 +561,7 @@ if (wordTrack && wordRotator) {
   const canvas = document.querySelector(".hero-dot-canvas");
   if (!canvas) return;
 
-  if (isSafari || shouldReduceMobileEffects) {
+  if (isSafari) {
     canvas.remove();
     return;
   }

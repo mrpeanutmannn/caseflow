@@ -191,8 +191,7 @@ textarea {
   box-shadow: 0 8px 24px rgba(26, 43, 58, 0.04);
 }
 
-.is-safari .site-header,
-.is-mobile-firefox .site-header {
+.is-safari .site-header {
   -webkit-backdrop-filter: none;
   backdrop-filter: none;
   background: rgba(255, 255, 255, 0.94);
@@ -454,8 +453,7 @@ textarea {
   animation: hero-dot-wave 18s ease-in-out infinite alternate;
 }
 
-.is-safari .hero-backdrop::after,
-.is-mobile-firefox .hero-backdrop::after {
+.is-safari .hero-backdrop::after {
   -webkit-mask-image: none;
   mask-image: none;
   animation: none;
@@ -805,6 +803,26 @@ textarea {
   mix-blend-mode: screen;
   opacity: 0.7;
   pointer-events: none;
+}
+
+.is-safari .hero-chevron {
+  filter: drop-shadow(0 18px 34px rgba(26, 43, 58, 0.1));
+}
+
+.is-safari .hero-mark .hcg-legacy-liquid,
+.is-safari .hero-mark .hcg-grain-layer,
+.is-safari .hero-mark .hcg-shine-group,
+.is-safari .hero-mark .hcg-liquid-gl-stack {
+  display: none;
+}
+
+.is-safari .hero-mark .hcg-fill {
+  fill: none;
+  stroke: rgba(26, 43, 58, 0.86);
+  stroke-width: 2.2px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
 }
 
 .js .hero-mark .hcg-liquid-dark,
@@ -3024,9 +3042,7 @@ main > .section + .section,
   }
 
   .is-safari .site-nav.is-open,
-  .is-safari .header-actions.is-open,
-  .is-mobile-firefox .site-nav.is-open,
-  .is-mobile-firefox .header-actions.is-open {
+  .is-safari .header-actions.is-open {
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
     background: rgba(255, 255, 255, 0.96);
