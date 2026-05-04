@@ -191,7 +191,8 @@ textarea {
   box-shadow: 0 8px 24px rgba(26, 43, 58, 0.04);
 }
 
-.is-safari .site-header {
+.is-safari .site-header,
+.is-mobile-firefox .site-header {
   -webkit-backdrop-filter: none;
   backdrop-filter: none;
   background: rgba(255, 255, 255, 0.94);
@@ -453,7 +454,8 @@ textarea {
   animation: hero-dot-wave 18s ease-in-out infinite alternate;
 }
 
-.is-safari .hero-backdrop::after {
+.is-safari .hero-backdrop::after,
+.is-mobile-firefox .hero-backdrop::after {
   -webkit-mask-image: none;
   mask-image: none;
   animation: none;
@@ -3022,7 +3024,9 @@ main > .section + .section,
   }
 
   .is-safari .site-nav.is-open,
-  .is-safari .header-actions.is-open {
+  .is-safari .header-actions.is-open,
+  .is-mobile-firefox .site-nav.is-open,
+  .is-mobile-firefox .header-actions.is-open {
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
     background: rgba(255, 255, 255, 0.96);
@@ -3287,7 +3291,7 @@ main > .section + .section,
     column-gap: clamp(8px, 2.4vw, 12px);
     font-size: clamp(0.78rem, 3.6vw, 1rem);
     line-height: 1.15;
-    margin: 0 0 clamp(10px, calc(8vw - 18px), 22px);
+    margin: 0 0 clamp(10px, calc(8vw - 18px), 22px) clamp(8px, 2.5vw, 14px);
     white-space: nowrap;
   }
 

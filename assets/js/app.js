@@ -11,9 +11,29 @@ const isSafari =
   /^((?!chrome|chromium|crios|fxios|edg|opr|android).)*safari/i.test(
     navigator.userAgent
   ) && /apple/i.test(navigator.vendor || "");
+const isFirefox = /firefox|fxios/i.test(navigator.userAgent);
+const mobilePerfQuery =
+  window.matchMedia &&
+  window.matchMedia("(max-width: 780px), (pointer: coarse)");
+const isMobileViewport = !mobilePerfQuery || mobilePerfQuery.matches;
+const shouldReduceMobileEffects =
+  isFirefox && isMobileViewport;
+const shouldDisableMobileChevronGL = isMobileViewport;
 
 if (isSafari) {
   document.documentElement.classList.add("is-safari");
+}
+
+if (isFirefox) {
+  document.documentElement.classList.add("is-firefox");
+}
+
+if (shouldReduceMobileEffects) {
+  document.documentElement.classList.add("is-mobile-firefox");
+}
+
+if (shouldDisableMobileChevronGL) {
+  document.documentElement.classList.add("is-mobile-chevron-static");
 }
 
 if (yearNode) {
@@ -392,9 +412,34 @@ document.querySelectorAll(".faq-item").forEach((item) => {
 
 if (wordTrack && wordRotator) {
   const words = Array.from(wordTrack.children);
+  const desktopHeroWords = words.map((word) => word.textContent.trim());
+  const mobileHeroWords = [
+    "utilities",
+    "groceries",
+    "childcare",
+    "recovery",
+    "mortgage",
+    "insurance",
+    "pet care",
+    "medication",
+    "expenses",
+  ];
   let activeIndex = 0;
   let wordHeight = 0;
   let rotationTimer = null;
+  let isUsingMobileWords = false;
+
+  const applyResponsiveWords = () => {
+    const useMobileWords = mobilePerfQuery && mobilePerfQuery.matches;
+    if (useMobileWords === isUsingMobileWords) return;
+
+    const nextWords = useMobileWords ? mobileHeroWords : desktopHeroWords;
+    words.forEach((word, index) => {
+      word.textContent = nextWords[index % nextWords.length];
+    });
+    activeIndex = activeIndex % words.length;
+    isUsingMobileWords = useMobileWords;
+  };
 
   const setTrackPosition = () => {
     const activeWord = words[activeIndex];
@@ -403,6 +448,8 @@ if (wordTrack && wordRotator) {
   };
 
   const setWordMetrics = () => {
+    applyResponsiveWords();
+
     let maxWidth = 0;
     let maxHeight = 0;
 
@@ -425,6 +472,7 @@ if (wordTrack && wordRotator) {
     setTrackPosition();
   };
 
+  applyResponsiveWords();
   setWordMetrics();
   rotationTimer = window.setInterval(rotateWords, 2200);
   window.addEventListener("resize", setWordMetrics);
@@ -519,7 +567,7 @@ if (wordTrack && wordRotator) {
   const canvas = document.querySelector(".hero-dot-canvas");
   if (!canvas) return;
 
-  if (isSafari) {
+  if (isSafari || shouldReduceMobileEffects) {
     canvas.remove();
     return;
   }
@@ -879,7 +927,7 @@ if (wordTrack && wordRotator) {
   const svg = mark.querySelector(".hero-chevron");
   if (!svg) return;
 
-  if (isSafari) {
+  if (isSafari || shouldDisableMobileChevronGL) {
     mark.classList.add("is-position-ready");
     mark.dispatchEvent(new CustomEvent("hero-chevron-position-ready"));
     return;
@@ -1155,7 +1203,7 @@ if (wordTrack && wordRotator) {
   const canvases = Array.from(mark.querySelectorAll(".hcg-liquid-gl"));
   if (!canvases.length) return;
 
-  if (isSafari) {
+  if (isSafari || shouldDisableMobileChevronGL) {
     canvases.forEach((canvas) => canvas.remove());
     return;
   }
